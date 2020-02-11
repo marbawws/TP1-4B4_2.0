@@ -1,18 +1,18 @@
 
 public class Commande {
 	
-	private double nomCient;
+	private double nomClient;
 	private String nomPlat;
 	private double nbPlats;
 
 	/* Retourne le Prix */
 	public double getPrix() {
-		return this.nomCient;
+		return this.nomClient;
 	}
 
 	/* Change le prix par le prix recu */
 	public void setPrix(double prix) {
-		this.nomCient = prix;
+		this.nomClient = prix;
 	}
 
 	/* Retourne le nom du plat */
