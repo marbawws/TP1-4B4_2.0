@@ -1,0 +1,10 @@
+-- NORMES DE PROGRAMMATION --
+
+- Les caractères accentués ne sont PAS permis.
+- Les variables doivent respecter le format suivant : nomDeLaVariable.
+- Les constantes doivent respecter le format suivant : NOM_DE_LA_CONSTANTE.
+- Les classes doivent commencer par une lettre majuscule.
+- Les lignes de code ne doivent pas dépasser la marge d'impression de 120.
+- Le code doit être formaté à l'aide du raccourci [ctrl + shift + f].
+- Le fonctionnement de chaque méthode doit être expliqué à l'aide d'un commentaire au-dessus.
+- Les éléments à corriger doivent être dans des commentaires TODO.
