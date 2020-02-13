@@ -3,6 +3,11 @@ public class Plat {
 
 	private double prix;
 	private String nomPlat;
+	
+	public Plat(double prix, String nomPlat) {
+		this.setPrix(prix);
+		this.setNomPlat(nomPlat);
+	}
 
 	/* Retourne le Prix */
 	public double getPrix() {
@@ -20,7 +25,7 @@ public class Plat {
 	}
 
 	/* Change le nom du plat par le nom du plat recu */
-	public void setNomPlats(String nomPlat) {
+	public void setNomPlat(String nomPlat) {
 		this.nomPlat = nomPlat;
 	}
 }

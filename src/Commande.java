@@ -1,18 +1,26 @@
 
 public class Commande {
 	
-	private double nomClient;
+	private String nomClient;
 	private String nomPlat;
-	private double nbPlats;
+	private int nbPlats;
+	private double prixPlat;
+	
+	public Commande(String nomClient, String nomPlat, int nbPlats, double prixPlat) {
+		this.setNomClient(nomClient);
+		this.setNomPlat(nomPlat);
+		this.setNbPlats(nbPlats);
+		this.setPrixPlats(prixPlat);
+	}
 
-	/* Retourne le Prix */
-	public double getPrix() {
+	/* Retourne le nom du client */
+	public String getNomClient() {
 		return this.nomClient;
 	}
 
-	/* Change le prix par le prix recu */
-	public void setPrix(double prix) {
-		this.nomClient = prix;
+	/* Change le nom du client par le nom recu */
+	public void setNomClient(String nomClient) {
+		this.nomClient = nomClient;
 	}
 
 	/* Retourne le nom du plat */
@@ -21,17 +29,27 @@ public class Commande {
 	}
 
 	/* Change le nom du plat par le nom du plat recu */
-	public void setNomPlats(String nomPlat) {
+	public void setNomPlat(String nomPlat) {
 		this.nomPlat = nomPlat;
 	}
 	
 	/* Retourne le nombre de plat de la commande */
-	public double getnbPlats() {
+	public int getnbPlats() {
 		return this.nbPlats;
 	}
 
 	/* Change le nombre de plat par le nombre du plat recu */
-	public void setnbPlats(double nbPlats) {
+	public void setNbPlats(int nbPlats) {
 		this.nbPlats = nbPlats;
+	}
+	
+	/* Retourne le nombre de plat de la commande */
+	public double getPrixPlat() {
+		return this.prixPlat;
+	}
+
+	/* Change le nombre de plat par le nombre du plat recu */
+	public void setPrixPlats(double prixPlat) {
+		this.prixPlat = prixPlat;
 	}
 }

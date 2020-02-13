@@ -2,6 +2,9 @@
 public class Client {
 	private String nom;
 	
+	public Client(String nom) {
+		this.setNom(nom);
+	}
 	
 	/*Retourne le nom*/
 	public String getNom(){

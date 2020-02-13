@@ -1,18 +1,37 @@
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import outilsjava.OutilsFichier;
 
 public class LireEnvoyerCommandes {
 
+	private static ArrayList<Commande> listeCommande = new ArrayList<Commande>();
+	
 	public static void main(String[] args) {
 		String[] tableauInformation = lireFichierEtMettreDansTableau();
 		if (verifier(tableauInformation)) {
-			// go salifu! TODO
+
+			for (int i = 0; i < tableauInformation.length; i++) {
+				System.out.println(tableauInformation[i]);
+			}
+			
+		} else {
+			System.out.println("Le fichier ne respecte pas le format demandé !\n\nArrêt du programme.");
 		}
 		
 	}
 
+	private static void creerObjets(String[] tableauInformation) {
+		//Création des objets Client.
+		
+		/*
+		 * Comme les commandes ont été validées dans l'étape précédente, nous pouvons directement
+		 * les placer dans des objets Commande.
+		 */
+		
+	}
+	
 	private static String[] lireFichierEtMettreDansTableau() {
 
 		int nblignes = 0;
@@ -42,6 +61,9 @@ public class LireEnvoyerCommandes {
 		return tableauInformation;
 	}
 	/*Cette méthode vérifie si chacune des lignes du tableau envoyer en paramètre est conforme au format*/
+	
+	//TODO Certains cas d'erreurs ne sont pas vérifiés pour la liste des commandes.
+	//Je suggère également d'avoir un seul énoncé return à la fin de la méthode.
 	private static boolean verifier(String[] tableauInformation) {
 		int lignePlats = 0;
 		int ligneCommandes = 0;
