@@ -4,7 +4,7 @@ public class Plat {
 	private double prix;
 	private String nomPlat;
 	
-	public Plat(double prix, String nomPlat) {
+	public Plat(String nomPlat, double prix) {
 		this.setPrix(prix);
 		this.setNomPlat(nomPlat);
 	}

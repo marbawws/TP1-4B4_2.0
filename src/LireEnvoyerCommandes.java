@@ -6,15 +6,23 @@ import outilsjava.OutilsFichier;
 
 public class LireEnvoyerCommandes {
 
-	private static ArrayList<Commande> listeCommande = new ArrayList<Commande>();
+	private static ArrayList<Client> listeClients = new ArrayList<Client>();
+	private static ArrayList<Plat> listePlats = new ArrayList<Plat>();
+	private static ArrayList<Commande> listeCommandes = new ArrayList<Commande>();
 	
 	public static void main(String[] args) {
 		String[] tableauInformation = lireFichierEtMettreDansTableau();
 		if (verifier(tableauInformation)) {
 
-			for (int i = 0; i < tableauInformation.length; i++) {
-				System.out.println(tableauInformation[i]);
-			}
+			creerListes(tableauInformation);
+			
+			System.out.println(listeClients.size());
+			System.out.println(listePlats.size());
+			System.out.println(listeCommandes.size());
+			System.out.println(listeCommandes.get(1).getNomPlat());
+			
+			//System.out.println("Bienvenue chez Barette!\nFactures :\n");
+			
 			
 		} else {
 			System.out.println("Le fichier ne respecte pas le format demandé !\n\nArrêt du programme.");
@@ -22,14 +30,35 @@ public class LireEnvoyerCommandes {
 		
 	}
 
-	private static void creerObjets(String[] tableauInformation) {
-		//Création des objets Client.
+	private static void creerListes(String[] tableauInformation) {
+		String mode = "Clients";
 		
-		/*
-		 * Comme les commandes ont été validées dans l'étape précédente, nous pouvons directement
-		 * les placer dans des objets Commande.
-		 */
-		
+		for (int i = 1; i < tableauInformation.length - 1; i++) {
+			if(tableauInformation[i].equals("Plats :")) {
+				mode = "Plats";
+			} else if (tableauInformation[i].equals("Commandes :")) {
+				mode = "Commandes";
+			} else {
+				switch (mode) {
+				case "Clients":
+					listeClients.add(new Client(tableauInformation[i]));
+					break;
+
+				case "Plats":
+					listePlats.add(new Plat(tableauInformation[i].trim().split(" ")[0],
+						Double.parseDouble(tableauInformation[i].trim().split(" ")[1])));
+					break;
+				case "Commandes":
+					listeCommandes.add(new Commande(tableauInformation[i].trim().split(" ")[0],
+							tableauInformation[i].trim().split(" ")[1],
+							Integer.parseInt(tableauInformation[i].trim().split(" ")[2])));
+					break;
+					
+					default:
+						break;
+				}
+			}
+		}
 	}
 	
 	private static String[] lireFichierEtMettreDansTableau() {
