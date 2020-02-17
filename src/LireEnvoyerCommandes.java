@@ -10,6 +10,10 @@ public class LireEnvoyerCommandes {
 	private static ArrayList<Plat> listePlats = new ArrayList<Plat>();
 	private static ArrayList<Commande> listeCommandes = new ArrayList<Commande>();
 	
+	private static final String LIGNE_CLIENTS_ENTREE = "Clients :";
+	private static final String LIGNE_PLATS_ENTREE = "Plats :";
+	private static final String LIGNE_COMMANDES_ENTREE = "Commandes :";
+	
 	public static void main(String[] args) {
 		String[] tableauInformation = lireFichierEtMettreDansTableau();
 		if (verifier(tableauInformation)) {
@@ -25,6 +29,11 @@ public class LireEnvoyerCommandes {
 		}
 		
 	}
+	
+	/*
+	 * TODO Bien qu'il fonctionne, le code de l'affichage des factures (creerFacture(), chercherCommandeClient()
+	 * et chercherIndexPlat() est un brouillon et devra être optimisé.
+	 */
 	
 	private static void creerFacture() {
 		
@@ -46,6 +55,10 @@ public class LireEnvoyerCommandes {
 		}
 	}
 	
+	/*
+	Retourne une liste contenant les commandes du client indiqué en paramètre. Retourne une liste vide
+	si le client n'a rien commandé.
+	*/
 	private static ArrayList<Commande> chercherCommandesClient(String nomClient) {
 		ArrayList<Commande> commandesClient = new ArrayList<Commande>();
 		
@@ -58,6 +71,7 @@ public class LireEnvoyerCommandes {
 		return commandesClient;
 	}
 	
+	//Retourne l'index du plat indiqué en paramètre ou -1 si le plat n'existe pas.
 	private static int chercherIndexPlat(String nomPlat) {
 		int index = -1;
 		
@@ -77,9 +91,9 @@ public class LireEnvoyerCommandes {
 		
 		//On commence après «Clients :» et on ignore la dernière ligne du fichier.
 		for (int i = 1; i < tableauInformation.length - 1; i++) { 
-			if(tableauInformation[i].equals("Plats :")) {
+			if(tableauInformation[i].equals(LIGNE_PLATS_ENTREE)) {
 				mode = "Plats";
-			} else if (tableauInformation[i].equals("Commandes :")) {
+			} else if (tableauInformation[i].equals(LIGNE_COMMANDES_ENTREE)) {
 				mode = "Commandes";
 			} else {
 				switch (mode) {
@@ -135,11 +149,12 @@ public class LireEnvoyerCommandes {
 
 			} catch (IOException e) {
 				
-				System.out.println("Erreur survenue quand on lit la ligne");
+				System.out.println("Une erreur est survenue lors de la lecture du fichier.");
 			}
 		}
 		return tableauInformation;
 	}
+	
 	/*Cette méthode vérifie si chacune des lignes du tableau envoyer en paramètre est conforme au format*/
 	
 	//TODO Certains cas d'erreurs ne sont pas vérifiés pour la liste des commandes.
@@ -147,10 +162,10 @@ public class LireEnvoyerCommandes {
 	private static boolean verifier(String[] tableauInformation) {
 		int lignePlats = 0;
 		int ligneCommandes = 0;
-		if (tableauInformation[0].equals("Clients :")) {
+		if (tableauInformation[0].equals(LIGNE_CLIENTS_ENTREE)) {
 
 			for (int i = 0; i < tableauInformation.length && lignePlats == 0; i++) {
-				if (tableauInformation[i].equals("Plats :")) {
+				if (tableauInformation[i].equals(LIGNE_PLATS_ENTREE)) {
 					lignePlats = i;
 				} // la ligne ou le mot Plats: se situe
 			}
@@ -162,7 +177,7 @@ public class LireEnvoyerCommandes {
 			}
 
 			for (int i = 0; i < tableauInformation.length && ligneCommandes == 0; i++) {
-				if (tableauInformation[i].equals("Commandes :")) {
+				if (tableauInformation[i].equals(LIGNE_COMMANDES_ENTREE)) {
 					ligneCommandes = i;
 				} // la ligne ou le mot Commandes: se situe
 			}
