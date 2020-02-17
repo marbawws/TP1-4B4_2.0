@@ -16,24 +16,67 @@ public class LireEnvoyerCommandes {
 
 			creerListes(tableauInformation);
 			
-			System.out.println(listeClients.size());
-			System.out.println(listePlats.size());
-			System.out.println(listeCommandes.size());
-			System.out.println(listeCommandes.get(1).getNomPlat());
+			System.out.println("Bienvenue chez Barette!\nFactures :\n");
 			
-			//System.out.println("Bienvenue chez Barette!\nFactures :\n");
-			
+			creerFacture();
 			
 		} else {
 			System.out.println("Le fichier ne respecte pas le format demandé !\n\nArrêt du programme.");
 		}
 		
 	}
-
-	private static void creerListes(String[] tableauInformation) {
-		String mode = "Clients";
+	
+	private static void creerFacture() {
 		
-		for (int i = 1; i < tableauInformation.length - 1; i++) {
+		// Vérifier si le client a des commandes à son nom.
+		for (int i = 0; i < listeClients.size(); i++) {
+			ArrayList<Commande> commandesClientCourant = chercherCommandesClient(listeClients.get(i).getNom());
+			double prix = 0;
+			
+			if (commandesClientCourant.isEmpty()) {
+				System.out.println(listeClients.get(i).getNom() + " " + prix + "$");
+			} else {
+				for (int j = 0; j < commandesClientCourant.size(); j++) {
+					//Additionner le prix de chaque commande faite par le client.
+					prix += commandesClientCourant.get(j).getPrixPlat() * commandesClientCourant.get(j).getNbPlats();
+				}
+				System.out.println(listeClients.get(i).getNom() + " " + prix + "$");
+			}
+			
+		}
+	}
+	
+	private static ArrayList<Commande> chercherCommandesClient(String nomClient) {
+		ArrayList<Commande> commandesClient = new ArrayList<Commande>();
+		
+		for (int i = 0; i < listeClients.size(); i++) {
+			if (nomClient.equals(listeCommandes.get(i).getNomClient())) {
+				commandesClient.add(listeCommandes.get(i));
+			}
+		}
+		
+		return commandesClient;
+	}
+	
+	private static int chercherIndexPlat(String nomPlat) {
+		int index = -1;
+		
+		for (int i = 0; i < listePlats.size(); i++) {
+			if (nomPlat.equals(listePlats.get(i).getNomPlat())) {
+				index = i;
+				break;
+			}
+		}
+		
+		return index;
+	}
+	
+	//Cette méthode popule les listes contenant les clients, les plats et les commandes.
+	private static void creerListes(String[] tableauInformation) {
+		String mode = "Clients"; //On sait que la première catégorie est clients.
+		
+		//On commence après «Clients :» et on ignore la dernière ligne du fichier.
+		for (int i = 1; i < tableauInformation.length - 1; i++) { 
 			if(tableauInformation[i].equals("Plats :")) {
 				mode = "Plats";
 			} else if (tableauInformation[i].equals("Commandes :")) {
@@ -52,10 +95,18 @@ public class LireEnvoyerCommandes {
 					listeCommandes.add(new Commande(tableauInformation[i].trim().split(" ")[0],
 							tableauInformation[i].trim().split(" ")[1],
 							Integer.parseInt(tableauInformation[i].trim().split(" ")[2])));
+					
+					int indexPlat = chercherIndexPlat(listeCommandes.get(listeCommandes.size() - 1).getNomPlat());
+					
+					if (indexPlat < 0) {
+						//Imprimer erreur
+					} else {
+						listeCommandes.get(listeCommandes.size() - 1).setPrixPlat(listePlats.get(indexPlat).getPrix());
+					}
 					break;
 					
-					default:
-						break;
+				default:
+					break;
 				}
 			}
 		}
