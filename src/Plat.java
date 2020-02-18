@@ -8,10 +8,6 @@ public class Plat {
 		this.setPrix(prix);
 		this.setNomPlat(nomPlat);
 	}
-	
-	public Plat(String nomPlat) {
-		this.setNomPlat(nomPlat);
-	}
 
 	/* Retourne le Prix */
 	public double getPrix() {
