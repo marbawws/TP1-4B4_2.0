@@ -1,4 +1,5 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -10,13 +11,11 @@ public class LireEnvoyerCommandes {
 	private static ArrayList<Plat> listePlats = new ArrayList<Plat>();
 	private static ArrayList<Commande> listeCommandes = new ArrayList<Commande>();
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		String[] tableauInformation = lireFichierEtMettreDansTableau();
 		if (verifier(tableauInformation)) {
 
 			creerListes(tableauInformation);
-			
-			System.out.println("Bienvenue chez Barette!\nFactures :\n");
 			
 			creerFacture();
 			
@@ -26,24 +25,37 @@ public class LireEnvoyerCommandes {
 		
 	}
 	
-	private static void creerFacture() {
+	private static void creerFacture() throws IOException {
 		
 		// Vérifier si le client a des commandes à son nom.
+		BufferedWriter informationOutput = OutilsFichier.ouvrirFicTexteEcriture("FichierSortie.txt");
+		informationOutput.write("Bienvenue chez Barette!\nFactures :\n");
+		
 		for (int i = 0; i < listeClients.size(); i++) {
 			ArrayList<Commande> commandesClientCourant = chercherCommandesClient(listeClients.get(i).getNom());
 			double prix = 0;
 			
 			if (commandesClientCourant.isEmpty()) {
-				System.out.println(listeClients.get(i).getNom() + " " + prix + "$");
+				//System.out.println(listeClients.get(i).getNom() + " " + prix + "$");
+				
+				informationOutput.write(listeClients.get(i).getNom() + " " + prix + "$");
+				informationOutput.newLine();
+				
 			} else {
+				
 				for (int j = 0; j < commandesClientCourant.size(); j++) {
 					//Additionner le prix de chaque commande faite par le client.
 					prix += commandesClientCourant.get(j).getPrixPlat() * commandesClientCourant.get(j).getNbPlats();
+					
 				}
-				System.out.println(listeClients.get(i).getNom() + " " + prix + "$");
+				//System.out.println(listeClients.get(i).getNom() + " " + prix + "$");
+				
+				informationOutput.write(listeClients.get(i).getNom() + " " + prix + "$");
+				informationOutput.newLine();
 			}
 			
 		}
+		informationOutput.close();
 	}
 	
 	private static ArrayList<Commande> chercherCommandesClient(String nomClient) {
@@ -125,7 +137,7 @@ public class LireEnvoyerCommandes {
 			try {
 				while (informations.readLine() != null) nblignes++; // trouver le nombre de lignes
 				informations = OutilsFichier.ouvrirFicTexteLecture("fichierEntree.txt"); // reload le buffereader pour
-																							// relire les lignes
+																						// relire les lignes
 				tableauInformation = new String[nblignes];
 
 				for (int i = 0; i < nblignes; i++) {
