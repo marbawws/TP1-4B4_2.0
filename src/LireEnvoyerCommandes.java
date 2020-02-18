@@ -20,7 +20,7 @@ public class LireEnvoyerCommandes {
 
 			creerListes(tableauInformation);
 			
-			System.out.println("Bienvenue chez Barette!\nFactures :\n");
+			System.out.println("Bienvenue chez Barette!\nFactures :");
 			
 			creerFacture();
 			
@@ -43,13 +43,13 @@ public class LireEnvoyerCommandes {
 			double prix = 0;
 			
 			if (commandesClientCourant.isEmpty()) {
-				System.out.println(listeClients.get(i).getNom() + " " + prix + "$");
+				System.out.println(listeClients.get(i).getNom() + " " + String.format("%.2f", prix) + "$");
 			} else {
 				for (int j = 0; j < commandesClientCourant.size(); j++) {
 					//Additionner le prix de chaque commande faite par le client.
 					prix += commandesClientCourant.get(j).getPrixPlat() * commandesClientCourant.get(j).getNbPlats();
 				}
-				System.out.println(listeClients.get(i).getNom() + " " + prix + "$");
+				System.out.println(listeClients.get(i).getNom() + " " + String.format("%.2f", prix) + "$");
 			}
 			
 		}
