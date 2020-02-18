@@ -18,24 +18,47 @@ public class LireEnvoyerCommandes {
 	public static void main(String[] args) throws IOException {
 
 		String[] tableauInformation = lireFichierEtMettreDansTableau();
-		if (verifier(tableauInformation)) {
+		if (verifierFormatFic(tableauInformation)) {
 
 			creerListes(tableauInformation);
 
-			System.out.println("Bienvenue chez Barette!\nFactures :");
-			
-
-			creerFacture();
+			if (verifierIntegriteClients() && verifierIntegritePlats()) {
+				creerFacture();
+			} else {
+				System.out.println("Le fichier ne respecte pas le format demandé !\n\nArrêt du programme.");
+			}
 			
 		} else {
 			System.out.println("Le fichier ne respecte pas le format demandé !\n\nArrêt du programme.");
 		}
 		
 	}
+
+	private static boolean verifierIntegriteClients() {
+		boolean valide = true;
+		
+		for (int i = 0; i < listeCommandes.size(); i++) {
+			if (chercherIndexClient(listeCommandes.get(i).getNomClient()) < 0){
+				valide = false;
+			}
+		}
+		
+		return valide;
+	}
 	
-
+	private static boolean verifierIntegritePlats() {
+		boolean valide = true;
+		
+		for (int i = 0; i < listeCommandes.size(); i++) {
+			if (chercherIndexPlat(listeCommandes.get(i).getNomPlat()) < 0){
+				valide = false;
+			}
+		}
+		
+		return valide;
+	}
+	
 	private static void creerFacture() throws IOException {
-
 		
 		// Vérifier si le client a des commandes à son nom.
 		BufferedWriter informationOutput = OutilsFichier.ouvrirFicTexteEcriture("FichierSortie.txt");
@@ -97,6 +120,19 @@ public class LireEnvoyerCommandes {
 		return index;
 	}
 	
+	private static int chercherIndexClient(String nomClient) {
+		int index = -1;
+		
+		for (int i = 0; i < listeClients.size(); i++) {
+			if (nomClient.equals(listeClients.get(i).getNom())) {
+				index = i;
+				break;
+			}
+		}
+		
+		return index;
+	}
+	
 	//Cette méthode popule les listes contenant les clients, les plats et les commandes.
 	private static void creerListes(String[] tableauInformation) {
 		String mode = "Clients"; //On sait que la première catégorie est clients.
@@ -125,7 +161,7 @@ public class LireEnvoyerCommandes {
 					int indexPlat = chercherIndexPlat(listeCommandes.get(listeCommandes.size() - 1).getNomPlat());
 					
 					if (indexPlat < 0) {
-						//Imprimer erreur
+						System.out.println("Erreur");
 					} else {
 						listeCommandes.get(listeCommandes.size() - 1).setPrixPlat(listePlats.get(indexPlat).getPrix());
 					}
@@ -171,7 +207,7 @@ public class LireEnvoyerCommandes {
 	
 	//TODO Certains cas d'erreurs ne sont pas vérifiés pour la liste des commandes.
 	//Je suggère également d'avoir un seul énoncé return à la fin de la méthode.
-	private static boolean verifier(String[] tableauInformation) {
+	private static boolean verifierFormatFic(String[] tableauInformation) {
 		int lignePlats = 0;
 		int ligneCommandes = 0;
 		if (tableauInformation[0].equals(LIGNE_CLIENTS_ENTREE)) {
