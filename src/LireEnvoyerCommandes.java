@@ -18,19 +18,25 @@ public class LireEnvoyerCommandes {
 	public static void main(String[] args) throws IOException {
 
 		String[] tableauInformation = lireFichierEtMettreDansTableau();
-		if (verifierFormatFic(tableauInformation)) {
-
-			creerListes(tableauInformation);
-
-			if (verifierIntegriteClients() && verifierIntegritePlats()) {
-				creerFacture();
+		
+		if (tableauInformation != null) {
+			
+			if (verifierFormatFic(tableauInformation)) {
+				
+				creerListes(tableauInformation);
+				
+				if (verifierIntegriteClients() && verifierIntegritePlats()) {
+					creerFacture();
+					
+				} else {
+					System.out.println("Le fichier ne respecte pas le format demandé !\nArrêt du programme.");
+				}
+				
 			} else {
-				System.out.println("Le fichier ne respecte pas le format demandé !\n\nArrêt du programme.");
+				System.out.println("Le fichier ne respecte pas le format demandé !\nArrêt du programme.");
 			}
-
-		} else {
-			System.out.println("Le fichier ne respecte pas le format demandé !\n\nArrêt du programme.");
 		}
+		
 
 	}
 
@@ -72,33 +78,41 @@ public class LireEnvoyerCommandes {
 	 */
 	private static void creerFacture() throws IOException {
 
-		// Vérifier si le client a des commandes à son nom.
 		BufferedWriter informationOutput = OutilsFichier.ouvrirFicTexteEcriture("FichierSortie.txt");
-		informationOutput.write("Bienvenue chez Barette!\nFactures :\n");
-
-		for (int i = 0; i < listeClients.size(); i++) {
-			ArrayList<Commande> commandesClientCourant = chercherCommandesClient(listeClients.get(i).getNom());
-			double prix = 0;
-
-			if (commandesClientCourant.isEmpty()) {
-
-				informationOutput.write(listeClients.get(i).getNom() + " " + String.format("%.2f", prix) + "$");
-				informationOutput.newLine();
-
-			} else {
-
-				for (int j = 0; j < commandesClientCourant.size(); j++) {
-					// Additionner le prix de chaque commande faite par le client.
-					prix += commandesClientCourant.get(j).getPrixPlat() * commandesClientCourant.get(j).getNbPlats();
-
+		
+		if (informationOutput != null) {
+			
+			informationOutput.write("Bienvenue chez Barette!\nFactures :\n");
+			
+			for (int i = 0; i < listeClients.size(); i++) {
+				ArrayList<Commande> commandesClientCourant = chercherCommandesClient(listeClients.get(i).getNom());
+				double prix = 0;
+				
+				if (commandesClientCourant.isEmpty()) {
+					
+					informationOutput.write(listeClients.get(i).getNom() + " " + String.format("%.2f", prix) + "$");
+					informationOutput.newLine();
+					
+				} else {
+					
+					for (int j = 0; j < commandesClientCourant.size(); j++) {
+						// Additionner le prix de chaque commande faite par le client.
+						prix += commandesClientCourant.get(j).getPrixPlat() * commandesClientCourant.get(j).getNbPlats();
+						
+					}
+					
+					informationOutput.write(listeClients.get(i).getNom() + " " + String.format("%.2f", prix) + "$");
+					informationOutput.newLine();
 				}
-
-				informationOutput.write(listeClients.get(i).getNom() + " " + String.format("%.2f", prix) + "$");
-				informationOutput.newLine();
+				
 			}
-
+			
+			informationOutput.close();
+			
+			System.out.println("\nFacture écrite dans FichierSortie.txt. Fin du programme.");
+		} else {
+			System.out.println("\nOpération annulée. Fin du programme.");
 		}
-		informationOutput.close();
 	}
 
 	/*
@@ -179,9 +193,7 @@ public class LireEnvoyerCommandes {
 
 					int indexPlat = chercherIndexPlat(listeCommandes.get(listeCommandes.size() - 1).getNomPlat());
 
-					if (indexPlat < 0) {
-						System.out.println("Erreur");
-					} else {
+					if (indexPlat >= 0) {
 						listeCommandes.get(listeCommandes.size() - 1).setPrixPlat(listePlats.get(indexPlat).getPrix());
 					}
 					break;
