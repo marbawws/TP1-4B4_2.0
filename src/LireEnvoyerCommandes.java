@@ -27,7 +27,6 @@ public class LireEnvoyerCommandes {
 				
 				if (verifierIntegriteClients() && verifierIntegritePlats()) {
 					creerFacture();
-					
 				} else {
 					System.out.println("Le fichier ne respecte pas le format demandé !\nArrêt du programme.");
 				}
@@ -36,7 +35,6 @@ public class LireEnvoyerCommandes {
 				System.out.println("Le fichier ne respecte pas le format demandé !\nArrêt du programme.");
 			}
 		}
-		
 
 	}
 
@@ -74,7 +72,7 @@ public class LireEnvoyerCommandes {
 	}
 
 	/*
-	 * Crée un fichier de sortie appelé « FichierSortie.txt contenant la facture.»
+	 * Crée un fichier de sortie appelé « FichierSortie.txt » contenant la facture.
 	 */
 	private static void creerFacture() throws IOException {
 
