@@ -1,0 +1,11 @@
+-- Salif Diarra --
+    
+    -Commandes incorrectes.
+    -Affichage de la facture sur le terminal et dans le fichier Facture-du-date-heure.txt.
+    -Affichage des commandes incorrectes ainsi que les détails et la raison de l'erreur.
+
+-- Marwane Rezgui --
+
+    -Ne pas afficher la facture d'un client si le prix est de 0$.
+    -Appliquer les taxes sur chaque facture.
+    -Calculer la facture par client.
