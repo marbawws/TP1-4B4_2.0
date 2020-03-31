@@ -244,46 +244,57 @@ public class LireEnvoyerCommandes {
 	private static boolean verifierFormatFic(String[] tableauInformation) {
 		int lignePlats = 0;
 		int ligneCommandes = 0;
+		boolean verifier = true;
 		if (tableauInformation[0].equals(LIGNE_CLIENTS_ENTREE)) {
+			
+			if (verifier) {
 
-			for (int i = 0; i < tableauInformation.length && lignePlats == 0; i++) {
-				if (tableauInformation[i].equals(LIGNE_PLATS_ENTREE)) {
-					lignePlats = i;
-				} // la ligne ou le mot Plats: se situe
-			}
+				for (int i = 0; i < tableauInformation.length && lignePlats == 0; i++) {
+					if (tableauInformation[i].equals(LIGNE_PLATS_ENTREE)) {
+						lignePlats = i;
+					} // la ligne ou le mot Plats: se situe
+				}
 
-			for (int i = 1; i < lignePlats; i++) {
-				if (tableauInformation[i].contains(" ")) {
-					return false;
-				} // si un nom contient un espace
-			}
+				for (int i = 1; i < lignePlats; i++) {
+					if (tableauInformation[i].contains(" ")) {
+						verifier = false;
+					} // si un nom contient un espace
+				}
+				
+				if (verifier) {
 
-			for (int i = 0; i < tableauInformation.length && ligneCommandes == 0; i++) {
-				if (tableauInformation[i].equals(LIGNE_COMMANDES_ENTREE)) {
-					ligneCommandes = i;
-				} // la ligne ou le mot Commandes: se situe
-			}
+					for (int i = 0; i < tableauInformation.length && ligneCommandes == 0; i++) {
+						if (tableauInformation[i].equals(LIGNE_COMMANDES_ENTREE)) {
+							ligneCommandes = i;
+						} // la ligne ou le mot Commandes: se situe
+					}
 
-			for (int i = lignePlats + 1; i < ligneCommandes; i++) {
-				if (!tableauInformation[i].matches("^.[a-zA-Z_]+ [0-9.]+$")) {
-					return false;
-				} // si un plat contient un espace avant le nombre
-			}
-			if (!tableauInformation[tableauInformation.length - 1].equals("Fin")) {
-				return false;
-			}
-
-			for (int i = ligneCommandes + 1; i < tableauInformation.length - 1; i++) {
-				if (!tableauInformation[i].matches("^.[a-zA-Z\u00C0-\u00FF]+ [a-zA-Z_]+ [0-9]+$")) {
-					return false;
-				} // si nom espace plat espace nombre
+					for (int i = lignePlats + 1; i < ligneCommandes; i++) {
+						if (!tableauInformation[i].matches("^.[a-zA-Z_]+ [0-9.]+$")) {
+							verifier = false;
+						} // si un plat contient un espace avant le nombre
+					}
+					if (verifier) {
+						
+						if (!tableauInformation[tableauInformation.length - 1].equals("Fin")) {
+							verifier =  false;
+						}
+						if (verifier) {
+							for (int i = ligneCommandes + 1; i < tableauInformation.length - 1; i++) {
+								if (!tableauInformation[i].matches("^.[a-zA-Z\u00C0-\u00FF]+ [a-zA-Z_]+ [0-9]+$")) {
+									return false;
+								} // si nom espace plat espace nombre
+							}
+						}
+					}
+				}
 			}
 
 		} else {
 
-			return false;
+			verifier = false;
 		}
 
-		return true;
+		return verifier;
 	}
 }
