@@ -12,22 +12,36 @@ import main.LireEnvoyerCommandes;
 import outilsjava.OutilsFichier;
 
 public class LireEnvoyerCommandesTest {
-
+	/* modele
 	@Test
-	public void testfacture() throws IOException {
+	public void comparerFactures() throws IOException {
 		// test en blackbox
-		String[] input = { "Clients :", "Roger", "Céline", "Steeve", "Plats :", "Poutine 10.5",
+		String[] inputs = { "Clients :", "Roger", "Céline", "Steeve", "Plats :", "Poutine 10.5",
 				"Frites 2.5", "Repas_Poulet 15.75", "Commandes :", "Roger Poutine 1", "Céline Frites 2",
 				"Céline Repas_Poulet 1", "Fin" }; // changer le input a guise
 		String[] factureAttendu = { "Bienvenue chez Barette!", "Factures :", "", "Roger 10.50$", "Céline 20.75$",
 				"Steeve 0.00$" } // le output que l'on veut avoir
 		;
-		changerInput(input);//changer le fichier entree pour faire nos tests
+		changerInput(inputs);//changer le fichier entree pour faire nos tests
 		LireEnvoyerCommandes.main(null);//appeler main pour faire le traitement
-		String[] factureRecue = lireSortieFacture();//recuperer le resultat
+		String[] factureRecue = lireSortieFacture();//recuperer le resultat			
 		assertArrayEquals(factureAttendu, factureRecue);// faire le test avec le output voulu
-
-		}
+	}
+	*/
+	@Test
+	public void verifierCommandesIncorrectes() throws IOException {
+		// test en blackbox
+		String[] inputs = { "Clients :", "Roger", "Céline", "Steeve", "Plats :", "Poutine 10.5",
+				"Frites 2.5", "Repas_Poulet 15.75", "Commandes :", "bob boisson -123", "bobbette glace 0",
+				"Alexanbob croquettes -1", "Fin" }; // changer le input a guise
+		String[] factureAttendu = { "Commande invalide" } // le output que l'on veut avoir
+		;
+		changerInput(inputs);//changer le fichier entree pour faire nos tests
+		LireEnvoyerCommandes.main(null);//appeler main pour faire le traitement
+		String[] factureRecue = lireSortieFacture();//recuperer le resultat			
+		assertEquals(factureAttendu[0], factureRecue[0]);// regarde la première ligne pour savoir si c'est une facture éronée
+	}
+	
 	
 	private void changerInput(String[] input) throws IOException {
 		BufferedWriter informationInput = OutilsFichier.ouvrirFicTexteEcriture("FichierEntree.txt");
@@ -36,16 +50,17 @@ public class LireEnvoyerCommandesTest {
 			informationInput.write(input[j]);
 			informationInput.newLine();
 		}
-		
+
 		informationInput.close();
 	}
+
 	private String[] lireSortieFacture() throws IOException {
 		int nblignes = 0;
 		String[] factureRecue = null;
 		BufferedReader informationsOutput = OutilsFichier.ouvrirFicTexteLecture("fichierSortie.txt");
 
 		if (informationsOutput == null) {
-			// le fichier n'existe pas, le message d'erreur est déjà envoyer 
+			// le fichier n'existe pas, le message d'erreur est déjà envoyer
 		} else {
 			while (informationsOutput.readLine() != null)
 				nblignes++; // trouver le nombre de lignes
