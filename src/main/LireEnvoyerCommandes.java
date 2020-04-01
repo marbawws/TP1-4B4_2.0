@@ -8,9 +8,9 @@ import outilsjava.OutilsFichier;
 
 public class LireEnvoyerCommandes {
 
-	private static ArrayList<Client> listeClients = new ArrayList<Client>();
-	private static ArrayList<Plat> listePlats = new ArrayList<Plat>();
-	private static ArrayList<Commande> listeCommandes = new ArrayList<Commande>();
+	public static ArrayList<Client> listeClients = new ArrayList<Client>();
+	public static ArrayList<Plat> listePlats = new ArrayList<Plat>();
+	public static ArrayList<Commande> listeCommandes = new ArrayList<Commande>();
 
 	private static final String LIGNE_CLIENTS_ENTREE = "Clients :";
 	private static final String LIGNE_PLATS_ENTREE = "Plats :";
@@ -27,7 +27,8 @@ public class LireEnvoyerCommandes {
 				creerListes(tableauInformation);
 				
 				if (verifierIntegriteClients() && verifierIntegritePlats()) {
-					creerFacture();
+					String[] facture = creerFacture();
+					ecrireFacture(facture);
 				} else {
 					System.out.println("Le fichier ne respecte pas le format demandé !\nArrêt du programme.");
 				}
@@ -44,7 +45,7 @@ public class LireEnvoyerCommandes {
 	 * la liste de clients. Retourne true si c'est le cas et false dans le cas
 	 * contraire.
 	 */
-	private static boolean verifierIntegriteClients() {
+	public static boolean verifierIntegriteClients() {
 		boolean valide = true;
 
 		for (int i = 0; i < listeCommandes.size(); i++) {
@@ -60,7 +61,7 @@ public class LireEnvoyerCommandes {
 	 * Vérifie si toutes les commandes comportent des plats qui existent dans la
 	 * liste de plats. Retourne true si c'est le cas et false dans le cas contraire.
 	 */
-	private static boolean verifierIntegritePlats() {
+	public static boolean verifierIntegritePlats() {
 		boolean valide = true;
 
 		for (int i = 0; i < listeCommandes.size(); i++) {
@@ -75,13 +76,14 @@ public class LireEnvoyerCommandes {
 	/*
 	 * Crée un fichier de sortie appelé « FichierSortie.txt » contenant la facture.
 	 */
-	private static void creerFacture() throws IOException {
+	public static String[] creerFacture() throws IOException {
 
-		BufferedWriter informationOutput = OutilsFichier.ouvrirFicTexteEcriture("FichierSortie.txt");
-		
-		if (informationOutput != null) {
+		//BufferedWriter informationOutput = OutilsFichier.ouvrirFicTexteEcriture("FichierSortie.txt");
+		String[] facture = new String[listeClients.size() + 1];
+		//if (informationOutput != null) {
 			
-			informationOutput.write("Bienvenue chez Barette!\nFactures :\n");
+			//informationOutput.write("Bienvenue chez Barette!\nFactures :\n");
+			facture[0] = "Bienvenue chez Barette!\nFactures :\n";
 			
 			for (int i = 0; i < listeClients.size(); i++) {
 				ArrayList<Commande> commandesClientCourant = chercherCommandesClient(listeClients.get(i).getNom());
@@ -89,8 +91,9 @@ public class LireEnvoyerCommandes {
 				
 				if (commandesClientCourant.isEmpty()) {
 					
-					informationOutput.write(listeClients.get(i).getNom() + " " + String.format("%.2f", prix) + "$");
-					informationOutput.newLine();
+					/*informationOutput.write(listeClients.get(i).getNom() + " " + String.format("%.2f", prix) + "$");
+					informationOutput.newLine();*/
+					facture[i + 1] = listeClients.get(i).getNom() + " " + String.format("%.2f", prix) + "$";
 					
 				} else {
 					
@@ -100,20 +103,43 @@ public class LireEnvoyerCommandes {
 						
 					}
 					
-					informationOutput.write(listeClients.get(i).getNom() + " " + String.format("%.2f", prix) + "$");
-					informationOutput.newLine();
+					/*informationOutput.write(listeClients.get(i).getNom() + " " + String.format("%.2f", prix) + "$");
+					informationOutput.newLine();*/		
+					facture[i + 1] = listeClients.get(i).getNom() + " " + String.format("%.2f", prix) + "$";
+					
 				}
 				
 			}
 			
-			informationOutput.close();
+	/*		informationOutput.close();
 			
 			System.out.println("\nFacture écrite dans FichierSortie.txt. Fin du programme.");
 		} else {
 			System.out.println("\nOpération annulée. Fin du programme.");
 		}
+	*/	
+		return facture;
 	}
-
+	/*
+	 * J'ai ajouter cette méthode pour facilité les tests :)
+	 * 
+	 */	
+	public static void ecrireFacture(String[] facture) throws IOException {
+		BufferedWriter informationOutput = OutilsFichier.ouvrirFicTexteEcriture("FichierSortie.txt");
+		if (informationOutput != null) {
+			
+			for (int j = 0; j < facture.length; j++) {
+				informationOutput.write(facture[j]);
+				informationOutput.newLine();
+			}
+			
+			informationOutput.close();
+			System.out.println("\nFacture écrite dans FichierSortie.txt. Fin du programme.");
+		} else {
+			System.out.println("\nOpération annulée. Fin du programme.");
+		}
+		
+	}
 	/*
 	 * Retourne une liste contenant les commandes du client indiqué en paramètre.
 	 * Retourne une liste vide si le client n'a rien commandé.
@@ -166,7 +192,7 @@ public class LireEnvoyerCommandes {
 
 	// Cette méthode popule les listes contenant les clients, les plats et les
 	// commandes.
-	private static void creerListes(String[] tableauInformation) {
+	public static void creerListes(String[] tableauInformation) {
 		String mode = "Clients"; // On sait que la première catégorie est clients.
 
 		// On commence après «Clients :» et on ignore la dernière ligne du tableau.
@@ -242,7 +268,7 @@ public class LireEnvoyerCommandes {
 	 * Cette méthode vérifie si chacune des lignes du tableau envoyées en paramètre
 	 * sont conformes au format demandé.
 	 */
-	private static boolean verifierFormatFic(String[] tableauInformation) {
+	public static boolean verifierFormatFic(String[] tableauInformation) {
 		int lignePlats = 0;
 		int ligneCommandes = 0;
 		boolean verifier = true;
