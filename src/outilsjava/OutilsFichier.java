@@ -187,9 +187,8 @@ public class OutilsFichier implements OutilsConstantes {
 
 						System.out.println( "\nLe fichier " + cheminAbsolu + " existe." );
 
-						char conf = OutilsLecture.lireOuiNon( "Voulez-vous écraser ce fichier ( O ou N ) ? " );
 
-						valide = ( conf == OUI ); // valide = true ou false.
+						valide = true ; // valide = true ou false.
 					}
 				}
 			} else {
