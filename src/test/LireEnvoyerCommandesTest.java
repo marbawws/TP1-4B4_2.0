@@ -12,6 +12,10 @@ import main.LireEnvoyerCommandes;
 import outilsjava.OutilsFichier;
 
 public class LireEnvoyerCommandesTest {
+	
+	private String[] inputOriginal = { "Clients :", "Roger", "Céline", "Steeve", "Plats :", "Poutine 10.5",
+			"Frites 2.5", "Repas_Poulet 15.75", "Commandes :", "Roger Poutine 1", "Céline Frites 2",
+			"Céline Repas_Poulet 1", "Fin" };
 	/* modele
 	@Test
 	public void comparerFactures() throws IOException {
@@ -66,11 +70,12 @@ public class LireEnvoyerCommandesTest {
 	
 	private void testerCommandeIncorrecte(String[] input, String[] factureAttendue) throws IOException{
 		changerInput(input);//changer le fichier entree pour faire nos tests
-		LireEnvoyerCommandes.main(null);//appeler main pour faire le traitement
+		LireEnvoyerCommandes.main(null);//appeler main pour faire le traitement		
+		changerInput(inputOriginal);// reset le fichierEntree 
 		String[] factureRecue = lireSortieFacture();//recuperer le resultat		
 		assertEquals(factureAttendue[3], factureRecue[3]);// 3 est ligne ou on lit commande invalide la ligne qui suit donne l'explication de l'erreur
 		assertEquals(factureAttendue[4], factureRecue[5]);// 4 est ligne ou on lit commande invalide la ligne qui suit donne l'explication de l'erreur, pour la facture 6 elle lit le nom
-		assertEquals(factureAttendue[5], factureRecue[6]);// 5 est ligne ou on lit commande invalide la ligne qui suit donne l'explication de l'erreur, pour la facture 6 elle lit le nom
+		assertEquals(factureAttendue[5], factureRecue[6]);// 5 est ligne ou on lit commande invalide la ligne qui suit donne l'explication de l'erreur, pour la facture 6 elle lit le nom	
 	}
 	
 	

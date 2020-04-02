@@ -181,13 +181,7 @@ public class OutilsFichier implements OutilsConstantes {
 								.println( "\nErreur, le fichier " + cheminAbsolu + " n'est pas permis en écriture." );
 						valide = false;
 					} else {
-						// Le fichier existe, est ordinaire et permis en écriture.
-
-						// On demande une confirmation avant de l'écraser.
-
-						System.out.println( "\nLe fichier " + cheminAbsolu + " existe." );
-
-
+						//avant on demandait d'ecraser le fichier, je l'ai enlever 
 						valide = true ; // valide = true ou false.
 					}
 				}
