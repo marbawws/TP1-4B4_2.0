@@ -53,12 +53,20 @@ public class LireEnvoyerCommandesTest {
 		String[] input6 = { "Clients :", "Roger", "Céline", "Steeve", "Plats :", "Poutine 10.5",
 				"Frites 2.5", "Repas_Poulet 15.75", "Commandes :", "bob glace -1", "Céline Frites 2",
 				"Céline Repas_Poulet 1", "Fin" }; // cas6: seulement une commande est erronee
-		String[] factureAttendue1 = { "Bienvenue chez Barette!", "Factures :", "", "Commande invalide", "Commande invalide", "Commande invalide" }; // le output que l'on veut avoir;
-		String[] factureAttendue2 = { "Bienvenue chez Barette!", "Factures :", "", "Commande invalide", "Commande invalide", "Commande invalide" }; // le output que l'on veut avoir;
-		String[] factureAttendue3 = { "Bienvenue chez Barette!", "Factures :", "", "Commande invalide", "Commande invalide", "Commande invalide" }; // le output que l'on veut avoir;
-		String[] factureAttendue4 = { "Bienvenue chez Barette!", "Factures :", "", "Commande invalide", "Commande invalide", "Commande invalide" }; // le output que l'on veut avoir;
-		String[] factureAttendue5 = { "Bienvenue chez Barette!", "Factures :", "", "Commande invalide", "Commande invalide", "Commande invalide" }; // le output que l'on veut avoir;
-		String[] factureAttendue6 = { "Bienvenue chez Barette!", "Factures :", "", "Commande invalide", "Céline 20.75$", "Steeve 0.00$"}; // le output que l'on veut avoir;
+		
+		String[] factureAttendue1 = { "Bienvenue chez Barette!", "Factures :", "", "Commande invalide",
+				"Commande invalide", "Commande invalide" }; // le output que l'on veut avoir;
+		String[] factureAttendue2 = { "Bienvenue chez Barette!", "Factures :", "", "Commande invalide",
+				"Commande invalide", "Commande invalide" }; // le output que l'on veut avoir;
+		String[] factureAttendue3 = { "Bienvenue chez Barette!", "Factures :", "", "Commande invalide",
+				"Commande invalide", "Commande invalide" }; // le output que l'on veut avoir;
+		String[] factureAttendue4 = { "Bienvenue chez Barette!", "Factures :", "", "Commande invalide",
+				"Commande invalide", "Commande invalide" }; // le output que l'on veut avoir;
+		String[] factureAttendue5 = { "Bienvenue chez Barette!", "Factures :", "", "Commande invalide",
+				"Commande invalide", "Commande invalide" }; // le output que l'on veut avoir;
+		String[] factureAttendue6 = { "Bienvenue chez Barette!", "Factures :", "", "Commande invalide",
+				"Céline 20.75$", "Steeve 0.00$"}; // le output que l'on veut avoir;
+		
 		testerCommandeIncorrecte(input1, factureAttendue1);
 		testerCommandeIncorrecte(input2, factureAttendue2);
 		testerCommandeIncorrecte(input3, factureAttendue3);
@@ -68,14 +76,51 @@ public class LireEnvoyerCommandesTest {
 		
 	}
 	
+	public void testSiPrix0() throws IOException {
+		//Cas 1 : Un plat ayant un prix > 0$ est commandé 0 fois.
+		String[] input1 = { "Clients :", "Roger", 
+							"Plats :", "Poutine 10.5",
+							"Commandes :", "Roger Poutine 0", 
+							"Fin" };
+		//Cas 2 : Un plat ayant un prix de 0$ est commandé > 0 fois.
+		String[] input2 = { "Clients :", "Roger", 
+							"Plats :", "Poutine 0",
+							"Commandes :", "Roger Poutine 3", 
+							"Fin" };
+		//Cas 3 : Un plat ayant un prix de 0$ est commandé 0 fois.
+		String[] input3 = { "Clients :", "Roger", 
+							"Plats :", "Poutine 0",
+							"Commandes :", "Roger Poutine 0", 
+							"Fin" };
+		//Cas 4 : Un plat ayant un prix > 0$ est commandé > 0 fois.
+		String[] input4 = { "Clients :", "Roger", 
+							"Plats :", "Poutine 1",
+							"Commandes :", "Roger Poutine 1", 
+							"Fin" };
+		
+		String[] factureAttendue1 = { "Bienvenue chez Barette!", "Factures :", "", "" };
+		String[] factureAttendue2 = { "Bienvenue chez Barette!", "Factures :", "", "" };
+		String[] factureAttendue3 = { "Bienvenue chez Barette!", "Factures :", "", "" };
+		String[] factureAttendue4 = { "Bienvenue chez Barette!", "Factures :", "", "Roger 1.00$" };
+		
+		testerCommandeIncorrecte(input1, factureAttendue1);
+		testerCommandeIncorrecte(input2, factureAttendue2);
+		testerCommandeIncorrecte(input3, factureAttendue3);
+		testerCommandeIncorrecte(input4, factureAttendue4);
+	}
+	
 	private void testerCommandeIncorrecte(String[] input, String[] factureAttendue) throws IOException{
 		changerInput(input);//changer le fichier entree pour faire nos tests
 		LireEnvoyerCommandes.main(null);//appeler main pour faire le traitement		
 		changerInput(inputOriginal);// reset le fichierEntree 
-		String[] factureRecue = lireSortieFacture();//recuperer le resultat		
-		assertEquals(factureAttendue[3], factureRecue[3]);// 3 est ligne ou on lit commande invalide la ligne qui suit donne l'explication de l'erreur
-		assertEquals(factureAttendue[4], factureRecue[5]);// 4 est ligne ou on lit commande invalide la ligne qui suit donne l'explication de l'erreur, pour la facture 6 elle lit le nom
-		assertEquals(factureAttendue[5], factureRecue[6]);// 5 est ligne ou on lit commande invalide la ligne qui suit donne l'explication de l'erreur, pour la facture 6 elle lit le nom	
+		String[] factureRecue = lireSortieFacture();//recuperer le resultat	
+		
+		// 3 est ligne ou on lit commande invalide la ligne qui suit donne l'explication de l'erreur
+		assertEquals(factureAttendue[3], factureRecue[3]);
+		// 4 est ligne ou on lit commande invalide la ligne qui suit donne l'explication de l'erreur, pour la facture 6 elle lit le nom
+		assertEquals(factureAttendue[4], factureRecue[4]);
+		// 5 est ligne ou on lit commande invalide la ligne qui suit donne l'explication de l'erreur, pour la facture 6 elle lit le nom
+		assertEquals(factureAttendue[5], factureRecue[5]);	
 	}
 	
 	

@@ -51,6 +51,7 @@ public class LireEnvoyerCommandes {
 		for (int i = 0; i < listeCommandes.size(); i++) {
 			if (chercherIndexClient(listeCommandes.get(i).getNomClient()) < 0) {
 				valide = false;
+				break;
 			}
 		}
 
@@ -67,6 +68,7 @@ public class LireEnvoyerCommandes {
 		for (int i = 0; i < listeCommandes.size(); i++) {
 			if (chercherIndexPlat(listeCommandes.get(i).getNomPlat()) < 0) {
 				valide = false;
+				break;
 			}
 		}
 
@@ -247,13 +249,13 @@ public class LireEnvoyerCommandes {
 			try {
 				while (informations.readLine() != null)
 					nblignes++; // trouver le nombre de lignes
-				informations = OutilsFichier.ouvrirFicTexteLecture("fichierEntree.txt"); // reload le buffereader pour
-																							// relire les lignes
-				tableauInformation = new String[nblignes];
-
-				for (int i = 0; i < nblignes; i++) {
-					String ligneTexte = informations.readLine();
-					tableauInformation[i] = ligneTexte;
+					informations = OutilsFichier.ouvrirFicTexteLecture("fichierEntree.txt"); // reload le buffereader pour
+																								// relire les lignes
+					tableauInformation = new String[nblignes];
+	
+					for (int i = 0; i < nblignes; i++) {
+						String ligneTexte = informations.readLine();
+						tableauInformation[i] = ligneTexte;
 				} // extraire toutes les lignes dans un tableau
 
 			} catch (IOException e) {
@@ -265,7 +267,7 @@ public class LireEnvoyerCommandes {
 	}
 
 	/*
-	 * Cette méthode vérifie si chacune des lignes du tableau envoyées en paramètre
+	 * Cette méthode vérifie si chacune des lignes du tableau envoyé en paramètre
 	 * sont conformes au format demandé.
 	 */
 	public static boolean verifierFormatFic(String[] tableauInformation) {

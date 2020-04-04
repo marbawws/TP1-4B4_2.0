@@ -11,7 +11,7 @@
 		ex: Roger 10.50 devient Roger 12.075(avec taxes)
 
 --Le calcul doit se faire par client. 
-	Dans le fichier sortie, le prix de chaque client doit �tre affich�.
+	Dans le fichier sortie, le prix de chaque client doit être affiché.
 	ex: Bienvenue chez Barette!
 		Factures :
 		Roger 10.50$
@@ -20,5 +20,5 @@
 	
 --Questions 
 	Le calcul est déjà fait par client, c'est la seule façon de le faire, donc je ne comprend pas la tâche.
-	r�ponse du prof: Il faut changer l'affichage de la facture pour montrer le prix de chaque client.
+	réponse du prof: Il faut changer l'affichage de la facture pour montrer le prix de chaque client.
 	
