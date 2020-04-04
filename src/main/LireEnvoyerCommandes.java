@@ -2,7 +2,13 @@ package main;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 import outilsjava.OutilsFichier;
 
@@ -29,8 +35,11 @@ public class LireEnvoyerCommandes {
 				if (verifierIntegriteClients() && verifierIntegritePlats()) {
 					String[] facture = creerFacture();
 					ecrireFacture(facture);
+					afficherSortie(facture);
 				} else {
-					System.out.println("Le fichier ne respecte pas le format demandé !\nArrêt du programme.");
+					//System.out.println("Le fichier ne respecte pas le format demandé !\nArrêt du programme.");
+					
+					
 				}
 				
 			} else {
@@ -40,6 +49,14 @@ public class LireEnvoyerCommandes {
 
 	}
 
+	public static void afficherSortie(String[] tabFacture) {
+		System.out.println("Contenu de la sortie :\n");
+		
+		for (String ligneSortie : tabFacture) {
+			System.out.println(ligneSortie);
+		}
+	}
+	
 	/*
 	 * Vérifie si toutes les commandes sont faites par des clients qui existent dans
 	 * la liste de clients. Retourne true si c'est le cas et false dans le cas
@@ -148,7 +165,13 @@ public class LireEnvoyerCommandes {
 	 * 
 	 */	
 	public static void ecrireFacture(String[] facture) throws IOException {
-		BufferedWriter informationOutput = OutilsFichier.ouvrirFicTexteEcriture("FichierSortie.txt");
+		SimpleDateFormat formatter = new SimpleDateFormat("dd_MM_yyyy-HH_mm_ss");  
+		TimeZone EST = TimeZone.getTimeZone("EST");
+		Calendar maintenant = Calendar.getInstance(EST);
+		Date date = maintenant.getTime();
+		String nomFicSortie = "Facture-du-" + formatter.format(date) + ".txt";
+		BufferedWriter informationOutput = OutilsFichier.ouvrirFicTexteEcriture(nomFicSortie);
+		
 		if (informationOutput != null) {
 			
 			for (int j = 0; j < facture.length; j++) {
@@ -157,7 +180,7 @@ public class LireEnvoyerCommandes {
 			}
 			
 			informationOutput.close();
-			System.out.println("\nFacture écrite dans FichierSortie.txt. Fin du programme.");
+			System.out.println("Facture écrite dans " + nomFicSortie + ".\n");
 		} else {
 			System.out.println("\nOpération annulée. Fin du programme.");
 		}

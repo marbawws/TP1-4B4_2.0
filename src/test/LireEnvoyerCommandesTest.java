@@ -166,7 +166,7 @@ public class LireEnvoyerCommandesTest {
 	@Test
 	public void testerDateEtHeure() {
 		//trouver la date et l'heure
-		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy-HH");  
+		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy-HH:mm:ss");  
 		TimeZone EST = TimeZone.getTimeZone("EST");
 		Calendar maintenant = Calendar.getInstance(EST);
 		Date date = maintenant.getTime();
