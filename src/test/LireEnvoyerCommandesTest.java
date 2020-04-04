@@ -32,6 +32,7 @@ public class LireEnvoyerCommandesTest {
 		assertArrayEquals(factureAttendu, factureRecue);// faire le test avec le output voulu
 	}
 	*/
+	
 	@Test
 	public void testerCommandesIncorrectes() throws IOException {
 		// test en blackbox
@@ -76,6 +77,7 @@ public class LireEnvoyerCommandesTest {
 		
 	}
 	
+	@Test
 	public void testSiPrix0() throws IOException {
 		//Cas 1 : Un plat ayant un prix > 0$ est commandé 0 fois.
 		String[] input1 = { "Clients :", "Roger", 
@@ -107,6 +109,39 @@ public class LireEnvoyerCommandesTest {
 		testerCommandeIncorrecte(input2, factureAttendue2);
 		testerCommandeIncorrecte(input3, factureAttendue3);
 		testerCommandeIncorrecte(input4, factureAttendue4);
+	}
+	
+	@Test
+	public void testCalculerTaxes() throws IOException {
+		
+		/*
+		//Cas 1 : Taxe sur une commande de 1$
+		String[] input1 = { "Clients :", "Roger", 
+				"Plats :", "Poutine 1",
+				"Commandes :", "Roger Poutine 1", 
+				"Fin" };
+		
+		//Cas 2 : Taxe sur une commande > 1$
+		String[] input2 = { "Clients :", "Roger", 
+				"Plats :", "Poutine 5",
+				"Commandes :", "Roger Poutine 1", 
+				"Fin" };
+		
+		//Cas 3 : Taxe sur une commande ayant un prix élevé
+		String[] input3 = { "Clients :", "Roger", 
+				"Plats :", "Poutine 10000",
+				"Commandes :", "Roger Poutine 1", 
+				"Fin" };
+		 */
+		
+		//Cas 1 : Taxe sur une commande de 1$
+		assertEquals(1.15, LireEnvoyerCommandes.calculerTaxes(1));
+		
+		//Cas 2 : Taxe sur une commande > 1$
+		assertEquals(5.75, LireEnvoyerCommandes.calculerTaxes(5));
+		
+		//Cas 3 : Taxe sur une commande ayant un prix élevé
+		assertEquals(11497.50, LireEnvoyerCommandes.calculerTaxes(10000));
 	}
 	
 	private void testerCommandeIncorrecte(String[] input, String[] factureAttendue) throws IOException{
