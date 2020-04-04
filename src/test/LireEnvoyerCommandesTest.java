@@ -145,6 +145,21 @@ public class LireEnvoyerCommandesTest {
 		assertEquals(11497.50, LireEnvoyerCommandes.calculerTaxes(10000));
 	}
 	
+	private void testerCommandeIncorrecte(String[] input, String[] factureAttendue) throws IOException{
+		changerInput(input);//changer le fichier entree pour faire nos tests
+		LireEnvoyerCommandes.main(null);//appeler main pour faire le traitement		
+		changerInput(inputOriginal);// reset le fichierEntree 
+		String[] factureRecue = lireSortieFacture();//recuperer le resultat	
+		
+		// 3 est ligne ou on lit commande invalide la ligne qui suit donne l'explication de l'erreur
+		assertEquals(factureAttendue[3], factureRecue[3]);
+		// 4 est ligne ou on lit commande invalide la ligne qui suit donne l'explication de l'erreur, pour la facture 6 elle lit le nom
+		assertEquals(factureAttendue[4], factureRecue[4]);
+		// 5 est ligne ou on lit commande invalide la ligne qui suit donne l'explication de l'erreur, pour la facture 6 elle lit le nom
+		assertEquals(factureAttendue[5], factureRecue[5]);	
+
+	}
+	
 	/**
 	 * test 2
 	 */
