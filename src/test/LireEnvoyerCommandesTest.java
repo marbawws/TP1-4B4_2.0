@@ -38,6 +38,7 @@ public class LireEnvoyerCommandesTest {
 		assertArrayEquals(factureAttendu, factureRecue);// faire le test avec le output voulu
 	}
 	*/
+	
 	@Test
 	public void testerSiCommandesIncorrectes() throws IOException {
 		String[] input1 = { "Clients :", "Roger", "Céline", "Steeve", "Plats :", "Poutine 10.5",
@@ -75,6 +76,73 @@ public class LireEnvoyerCommandesTest {
 		changerInput(inputOriginal);// reset le fichierEntree 
 		String[] factureRecue = lireSortieFacture();//recuperer le resultat		
 		assertEquals("Commande Incorrecte", factureRecue[0]);
+	}
+	
+	@Test
+	public void testSiPrix0() throws IOException {
+		//Cas 1 : Un plat ayant un prix > 0$ est commandé 0 fois.
+		String[] input1 = { "Clients :", "Roger", 
+							"Plats :", "Poutine 10.5",
+							"Commandes :", "Roger Poutine 0", 
+							"Fin" };
+		//Cas 2 : Un plat ayant un prix de 0$ est commandé > 0 fois.
+		String[] input2 = { "Clients :", "Roger", 
+							"Plats :", "Poutine 0",
+							"Commandes :", "Roger Poutine 3", 
+							"Fin" };
+		//Cas 3 : Un plat ayant un prix de 0$ est commandé 0 fois.
+		String[] input3 = { "Clients :", "Roger", 
+							"Plats :", "Poutine 0",
+							"Commandes :", "Roger Poutine 0", 
+							"Fin" };
+		//Cas 4 : Un plat ayant un prix > 0$ est commandé > 0 fois.
+		String[] input4 = { "Clients :", "Roger", 
+							"Plats :", "Poutine 1",
+							"Commandes :", "Roger Poutine 1", 
+							"Fin" };
+		
+		String[] factureAttendue1 = { "Bienvenue chez Barette!", "Factures :", "", "" };
+		String[] factureAttendue2 = { "Bienvenue chez Barette!", "Factures :", "", "" };
+		String[] factureAttendue3 = { "Bienvenue chez Barette!", "Factures :", "", "" };
+		String[] factureAttendue4 = { "Bienvenue chez Barette!", "Factures :", "", "Roger 1.00$" };
+		
+		testerCommandeIncorrecte(input1, factureAttendue1);
+		testerCommandeIncorrecte(input2, factureAttendue2);
+		testerCommandeIncorrecte(input3, factureAttendue3);
+		testerCommandeIncorrecte(input4, factureAttendue4);
+	}
+	
+	@Test
+	public void testCalculerTaxes() throws IOException {
+		
+		/*
+		//Cas 1 : Taxe sur une commande de 1$
+		String[] input1 = { "Clients :", "Roger", 
+				"Plats :", "Poutine 1",
+				"Commandes :", "Roger Poutine 1", 
+				"Fin" };
+		
+		//Cas 2 : Taxe sur une commande > 1$
+		String[] input2 = { "Clients :", "Roger", 
+				"Plats :", "Poutine 5",
+				"Commandes :", "Roger Poutine 1", 
+				"Fin" };
+		
+		//Cas 3 : Taxe sur une commande ayant un prix élevé
+		String[] input3 = { "Clients :", "Roger", 
+				"Plats :", "Poutine 10000",
+				"Commandes :", "Roger Poutine 1", 
+				"Fin" };
+		 */
+		
+		//Cas 1 : Taxe sur une commande de 1$
+		assertEquals(1.15, LireEnvoyerCommandes.calculerTaxes(1));
+		
+		//Cas 2 : Taxe sur une commande > 1$
+		assertEquals(5.75, LireEnvoyerCommandes.calculerTaxes(5));
+		
+		//Cas 3 : Taxe sur une commande ayant un prix élevé
+		assertEquals(11497.50, LireEnvoyerCommandes.calculerTaxes(10000));
 	}
 	
 	/**

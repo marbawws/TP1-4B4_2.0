@@ -51,6 +51,7 @@ public class LireEnvoyerCommandes {
 		for (int i = 0; i < listeCommandes.size(); i++) {
 			if (chercherIndexClient(listeCommandes.get(i).getNomClient()) < 0) {
 				valide = false;
+				break;
 			}
 		}
 
@@ -67,6 +68,7 @@ public class LireEnvoyerCommandes {
 		for (int i = 0; i < listeCommandes.size(); i++) {
 			if (chercherIndexPlat(listeCommandes.get(i).getNomPlat()) < 0) {
 				valide = false;
+				break;
 			}
 		}
 
@@ -87,25 +89,35 @@ public class LireEnvoyerCommandes {
 			
 			for (int i = 0; i < listeClients.size(); i++) {
 				ArrayList<Commande> commandesClientCourant = chercherCommandesClient(listeClients.get(i).getNom());
-				double prix = 0;
+				double prixAvantTaxes = 0;
+				double prixApresTaxes;
 				
 				if (commandesClientCourant.isEmpty()) {
 					
 					/*informationOutput.write(listeClients.get(i).getNom() + " " + String.format("%.2f", prix) + "$");
 					informationOutput.newLine();*/
-					facture[i + 1] = listeClients.get(i).getNom() + " " + String.format("%.2f", prix) + "$";
+					facture[i + 1] = listeClients.get(i).getNom() + " " + String.format("%.2f", prixAvantTaxes) + "$";
 					
 				} else {
 					
 					for (int j = 0; j < commandesClientCourant.size(); j++) {
 						// Additionner le prix de chaque commande faite par le client.
-						prix += commandesClientCourant.get(j).getPrixPlat() * commandesClientCourant.get(j).getNbPlats();
+						prixAvantTaxes +=
+							commandesClientCourant.get(j).getPrixPlat() * commandesClientCourant.get(j).getNbPlats();
+						
+						//TODO Ajouter cette ligne après avoir complété calculerTaxes.
+						//prixApresTaxes = calculerTaxes(prixAvantTaxes);
+						
 						
 					}
 					
 					/*informationOutput.write(listeClients.get(i).getNom() + " " + String.format("%.2f", prix) + "$");
-					informationOutput.newLine();*/		
-					facture[i + 1] = listeClients.get(i).getNom() + " " + String.format("%.2f", prix) + "$";
+					informationOutput.newLine();*/
+					
+					//TODO Remplacer la dernière ligne par celle-ci après avoir complété calculerTaxes.
+					//facture[i + 1] = listeClients.get(i).getNom() + " " + String.format("%.2f", prixApresTaxes) + "$";
+					
+					facture[i + 1] = listeClients.get(i).getNom() + " " + String.format("%.2f", prixAvantTaxes) + "$";
 					
 				}
 				
@@ -120,6 +132,17 @@ public class LireEnvoyerCommandes {
 	*/	
 		return facture;
 	}
+	
+	public static double calculerTaxes(double montantAvantTaxes) {
+		/*
+		 * Voici une coquille de méthode qui calcule les taxes. Elle 
+		 * Évidemment, je ne fais que suggérer une façon de gérer les taxes.
+		 * J'ai également ajouté un squelette dans creerFacture.
+		 * N'hésite pas à utiliser une structure différente si celle-ci ne fonctionne pas.
+		 */
+		return 0;
+	}
+	
 	/*
 	 * J'ai ajouter cette méthode pour facilité les tests :)
 	 * 
@@ -247,13 +270,13 @@ public class LireEnvoyerCommandes {
 			try {
 				while (informations.readLine() != null)
 					nblignes++; // trouver le nombre de lignes
-				informations = OutilsFichier.ouvrirFicTexteLecture("fichierEntree.txt"); // reload le buffereader pour
-																							// relire les lignes
-				tableauInformation = new String[nblignes];
-
-				for (int i = 0; i < nblignes; i++) {
-					String ligneTexte = informations.readLine();
-					tableauInformation[i] = ligneTexte;
+					informations = OutilsFichier.ouvrirFicTexteLecture("fichierEntree.txt"); // reload le buffereader pour
+																								// relire les lignes
+					tableauInformation = new String[nblignes];
+	
+					for (int i = 0; i < nblignes; i++) {
+						String ligneTexte = informations.readLine();
+						tableauInformation[i] = ligneTexte;
 				} // extraire toutes les lignes dans un tableau
 
 			} catch (IOException e) {
@@ -265,7 +288,7 @@ public class LireEnvoyerCommandes {
 	}
 
 	/*
-	 * Cette méthode vérifie si chacune des lignes du tableau envoyées en paramètre
+	 * Cette méthode vérifie si chacune des lignes du tableau envoyé en paramètre
 	 * sont conformes au format demandé.
 	 */
 	public static boolean verifierFormatFic(String[] tableauInformation) {
@@ -324,4 +347,6 @@ public class LireEnvoyerCommandes {
 
 		return verifier;
 	}
+
+	
 }
