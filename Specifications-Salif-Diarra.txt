@@ -37,3 +37,5 @@
 
     -Quel est la quantité maximale de plats pouvant être commandés?
      Est-ce qu'il faut gérer cela?
+
+    -Que faire une commande est invalide pour plus qu'une raison?

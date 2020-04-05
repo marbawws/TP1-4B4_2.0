@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -21,6 +22,9 @@ public class LireEnvoyerCommandes {
 	private static final String LIGNE_CLIENTS_ENTREE = "Clients :";
 	private static final String LIGNE_PLATS_ENTREE = "Plats :";
 	private static final String LIGNE_COMMANDES_ENTREE = "Commandes :";
+	
+	public static ArrayList<String> erreurs = new ArrayList<String>();
+	public static ArrayList<String> factures = new ArrayList<String>();
 
 	public static void main(String[] args) throws IOException {
 
@@ -32,15 +36,9 @@ public class LireEnvoyerCommandes {
 				
 				creerListes(tableauInformation);
 				
-				if (verifierIntegriteClients() && verifierIntegritePlats()) {
-					String[] facture = creerFacture();
-					ecrireFacture(facture);
-					afficherSortie(facture);
-				} else {
-					//System.out.println("Le fichier ne respecte pas le format demandé !\nArrêt du programme.");
-					
-					
-				}
+				String[] facture = creerSortie();
+				ecrireFicSortie(facture);
+				afficherContenuTableau(facture);
 				
 			} else {
 				System.out.println("Le fichier ne respecte pas le format demandé !\nArrêt du programme.");
@@ -49,7 +47,10 @@ public class LireEnvoyerCommandes {
 
 	}
 
-	public static void afficherSortie(String[] tabFacture) {
+	/*
+	 * Affiche toutes les lignes d'un tableau de caractères dans la console.
+	 */
+	public static void afficherContenuTableau(String[] tabFacture) {
 		System.out.println("Contenu de la sortie :\n");
 		
 		for (String ligneSortie : tabFacture) {
@@ -57,102 +58,52 @@ public class LireEnvoyerCommandes {
 		}
 	}
 	
+	
 	/*
-	 * Vérifie si toutes les commandes sont faites par des clients qui existent dans
-	 * la liste de clients. Retourne true si c'est le cas et false dans le cas
-	 * contraire.
+	 * Crée la facture pour la commande entrée en paramètre si elle est valide.
+	 * Sinon, crée les erreurs pour la commande entrée en paramètre.
 	 */
-	public static boolean verifierIntegriteClients() {
-		boolean valide = true;
-
-		for (int i = 0; i < listeCommandes.size(); i++) {
-			if (chercherIndexClient(listeCommandes.get(i).getNomClient()) < 0) {
-				valide = false;
-				break;
-			}
-		}
-
-		return valide;
-	}
-
-	/*
-	 * Vérifie si toutes les commandes comportent des plats qui existent dans la
-	 * liste de plats. Retourne true si c'est le cas et false dans le cas contraire.
-	 */
-	public static boolean verifierIntegritePlats() {
-		boolean valide = true;
-
-		for (int i = 0; i < listeCommandes.size(); i++) {
-			if (chercherIndexPlat(listeCommandes.get(i).getNomPlat()) < 0) {
-				valide = false;
-				break;
-			}
-		}
-
-		return valide;
-	}
-
-	/*
-	 * Crée un fichier de sortie appelé « FichierSortie.txt » contenant la facture.
-	 */
-	public static String[] creerFacture() throws IOException {
-
-		//BufferedWriter informationOutput = OutilsFichier.ouvrirFicTexteEcriture("FichierSortie.txt");
-		String[] facture = new String[listeClients.size() + 1];
-		//if (informationOutput != null) {
+	public static void traiterCommande(Commande commandeCourante) {
+		double prixAvantTaxes = 0;
+		double prixApresTaxes;
+		
+		if (clientExiste(commandeCourante) && platExiste(commandeCourante) && commandeCourante.getNbPlats() > 0) {
 			
-			//informationOutput.write("Bienvenue chez Barette!\nFactures :\n");
-			facture[0] = "Bienvenue chez Barette!\nFactures :\n";
+			prixAvantTaxes = commandeCourante.getPrixPlat() * commandeCourante.getNbPlats();
 			
-			for (int i = 0; i < listeClients.size(); i++) {
-				ArrayList<Commande> commandesClientCourant = chercherCommandesClient(listeClients.get(i).getNom());
-				double prixAvantTaxes = 0;
-				double prixApresTaxes;
-				
-				if (commandesClientCourant.isEmpty()) {
-					
-					/*informationOutput.write(listeClients.get(i).getNom() + " " + String.format("%.2f", prix) + "$");
-					informationOutput.newLine();*/
-					facture[i + 1] = listeClients.get(i).getNom() + " " + String.format("%.2f", prixAvantTaxes) + "$";
-					
-				} else {
-					
-					for (int j = 0; j < commandesClientCourant.size(); j++) {
-						// Additionner le prix de chaque commande faite par le client.
-						prixAvantTaxes +=
-							commandesClientCourant.get(j).getPrixPlat() * commandesClientCourant.get(j).getNbPlats();
-						
-						//TODO Ajouter cette ligne après avoir complété calculerTaxes.
-						//prixApresTaxes = calculerTaxes(prixAvantTaxes);
-						
-						
-					}
-					
-					/*informationOutput.write(listeClients.get(i).getNom() + " " + String.format("%.2f", prix) + "$");
-					informationOutput.newLine();*/
-					
-					//TODO Remplacer la dernière ligne par celle-ci après avoir complété calculerTaxes.
-					//facture[i + 1] = listeClients.get(i).getNom() + " " + String.format("%.2f", prixApresTaxes) + "$";
-					
-					facture[i + 1] = listeClients.get(i).getNom() + " " + String.format("%.2f", prixAvantTaxes) + "$";
-					
-				}
-				
-			}
+			factures.add(commandeCourante.getNomClient() + " " +
+				String.format("%.2f", prixAvantTaxes) + "$");
 			
-	/*		informationOutput.close();
-			
-			System.out.println("\nFacture écrite dans FichierSortie.txt. Fin du programme.");
 		} else {
-			System.out.println("\nOpération annulée. Fin du programme.");
+			
+			if(!clientExiste(commandeCourante)) {
+				erreurs.add(commandeCourante.getNomClient() + " " + 
+						commandeCourante.getNomPlat() + " " + 
+						commandeCourante.getNbPlats() + 
+						" - Le client " + commandeCourante.getNomClient() + " n'existe pas.");
+			}
+			
+			if(!platExiste(commandeCourante)) {
+				erreurs.add(commandeCourante.getNomClient() + " " + 
+						commandeCourante.getNomPlat() + " " + 
+						commandeCourante.getNbPlats() + 
+						" - Le plat " + commandeCourante.getNomPlat() + " n'existe pas.");
+			}
+			
+			if(commandeCourante.getNbPlats() == 0) {
+				erreurs.add(commandeCourante.getNomClient() + " " + 
+						commandeCourante.getNomPlat() + " " + 
+						commandeCourante.getNbPlats() + 
+						" - Le client doit commander au moins un plat.");
+			}
+
 		}
-	*/	
-		return facture;
+			
 	}
 	
 	public static double calculerTaxes(double montantAvantTaxes) {
 		/*
-		 * Voici une coquille de méthode qui calcule les taxes. Elle 
+		 * Voici une coquille de méthode qui calcule les taxes.
 		 * Évidemment, je ne fais que suggérer une façon de gérer les taxes.
 		 * J'ai également ajouté un squelette dans creerFacture.
 		 * N'hésite pas à utiliser une structure différente si celle-ci ne fonctionne pas.
@@ -161,10 +112,75 @@ public class LireEnvoyerCommandes {
 	}
 	
 	/*
-	 * J'ai ajouter cette méthode pour facilité les tests :)
-	 * 
+	 * Vérifie si le client de la commande entrée en paramètre existe dans
+	 * la liste de clients. Retourne true si c'est le cas et false dans le cas contraire.
+	 */
+	public static boolean clientExiste(Commande commandeAVerifier) {
+		boolean valide = true;
+		
+		if (chercherIndexClient(commandeAVerifier.getNomClient()) < 0) {
+			valide = false;
+		}
+		
+		return valide;
+	}
+	
+	/*
+	 * Vérifie si le plat de la commande entrée en paramètre existe dans
+	 * la liste de plats. Retourne true si c'est le cas et false dans le cas contraire.
+	 */
+	public static boolean platExiste(Commande commandeAVerifier) {
+		boolean valide = true;
+		
+		if (chercherIndexPlat(commandeAVerifier.getNomPlat()) < 0) {
+			valide = false;
+		}
+		
+		return valide;
+	}
+	
+	/*
+	 * Crée un tableau de caractères contenant la sortie.
+	 */
+	public static String[] creerSortie() throws IOException {
+		ArrayList<String> sortie = new ArrayList<String>();
+		
+		sortie.add("Bienvenue chez Barette!");
+		
+		for (Commande commandeCourante : listeCommandes) {
+			traiterCommande(commandeCourante);
+		}
+
+		if (!erreurs.isEmpty()) {
+			sortie.add("\nErreurs :");
+			sortie.addAll(erreurs);
+		}
+		
+		sortie.add("\nFactures :");
+		sortie.addAll(factures);
+		
+		return convertirVersTabChaines(sortie);
+	}
+	
+	/*
+	 * Convertit un ArrayList de caractères en tableau de caractères.
+	 */
+	public static String[] convertirVersTabChaines(ArrayList<String> tab) 
+    { 
+		// Convertir l'ArrayList en tableau d'objets.
+        Object[] tabObj = tab.toArray(); 
+  
+        // Convertir le tableau d'objets en tableau de chaînes.
+        String[] str = Arrays .copyOf(tabObj, tabObj.length, String[].class); 
+  
+        return str; 
+    } 
+	
+	
+	/*
+	 * Écrit le contenu de la sortie dans un fichier nommé Facture-du-date-heure.txt.
 	 */	
-	public static void ecrireFacture(String[] facture) throws IOException {
+	public static void ecrireFicSortie(String[] sortie) throws IOException {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd_MM_yyyy-HH_mm_ss");  
 		TimeZone EST = TimeZone.getTimeZone("EST");
 		Calendar maintenant = Calendar.getInstance(EST);
@@ -174,8 +190,8 @@ public class LireEnvoyerCommandes {
 		
 		if (informationOutput != null) {
 			
-			for (int j = 0; j < facture.length; j++) {
-				informationOutput.write(facture[j]);
+			for (int i = 0; i < sortie.length; i++) {
+				informationOutput.write(sortie[i]);
 				informationOutput.newLine();
 			}
 			
@@ -185,21 +201,6 @@ public class LireEnvoyerCommandes {
 			System.out.println("\nOpération annulée. Fin du programme.");
 		}
 		
-	}
-	/*
-	 * Retourne une liste contenant les commandes du client indiqué en paramètre.
-	 * Retourne une liste vide si le client n'a rien commandé.
-	 */
-	private static ArrayList<Commande> chercherCommandesClient(String nomClient) {
-		ArrayList<Commande> commandesClient = new ArrayList<Commande>();
-
-		for (int i = 0; i < listeClients.size(); i++) {
-			if (nomClient.equals(listeCommandes.get(i).getNomClient())) {
-				commandesClient.add(listeCommandes.get(i));
-			}
-		}
-
-		return commandesClient;
 	}
 
 	/*
@@ -236,8 +237,7 @@ public class LireEnvoyerCommandes {
 		return index;
 	}
 
-	// Cette méthode popule les listes contenant les clients, les plats et les
-	// commandes.
+	// Cette méthode popule les listes contenant les clients, les plats et les commandes.
 	public static void creerListes(String[] tableauInformation) {
 		String mode = "Clients"; // On sait que la première catégorie est clients.
 
@@ -277,8 +277,7 @@ public class LireEnvoyerCommandes {
 	}
 
 	/*
-	 * Lis le fichier fichierEntree.txt et transfère son contenu dans un tableau qui
-	 * est retourné.
+	 * Lis le fichier fichierEntree.txt et transfère son contenu dans un tableau qui est retourné.
 	 */
 	private static String[] lireFichierEtMettreDansTableau() {
 
@@ -286,21 +285,20 @@ public class LireEnvoyerCommandes {
 		String[] tableauInformation = null;
 		BufferedReader informations = OutilsFichier.ouvrirFicTexteLecture("fichierEntree.txt");
 
-		if (informations == null) {
-			// le fichier n'existe pas, le message d'erreur est déjà envoyer par soti <3
-		} else {
-
+		if (informations != null) {
 			try {
 				while (informations.readLine() != null)
-					nblignes++; // trouver le nombre de lignes
-					informations = OutilsFichier.ouvrirFicTexteLecture("fichierEntree.txt"); // reload le buffereader pour
-																								// relire les lignes
+					// trouver le nombre de lignes
+					nblignes++;
+					// reload le buffereader pour relire les lignes
+					informations = OutilsFichier.ouvrirFicTexteLecture("fichierEntree.txt"); 
 					tableauInformation = new String[nblignes];
 	
+					// extraire toutes les lignes dans un tableau
 					for (int i = 0; i < nblignes; i++) {
 						String ligneTexte = informations.readLine();
 						tableauInformation[i] = ligneTexte;
-				} // extraire toutes les lignes dans un tableau
+				} 
 
 			} catch (IOException e) {
 
@@ -311,8 +309,7 @@ public class LireEnvoyerCommandes {
 	}
 
 	/*
-	 * Cette méthode vérifie si chacune des lignes du tableau envoyé en paramètre
-	 * sont conformes au format demandé.
+	 * Cette méthode vérifie si chacune des lignes du tableau envoyé en paramètre sont conformes au format demandé.
 	 */
 	public static boolean verifierFormatFic(String[] tableauInformation) {
 		int lignePlats = 0;
@@ -370,6 +367,5 @@ public class LireEnvoyerCommandes {
 
 		return verifier;
 	}
-
 	
 }
