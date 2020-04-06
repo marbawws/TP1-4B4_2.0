@@ -66,6 +66,11 @@ public class LireEnvoyerCommandes {
 	public static void traiterCommande(Commande commandeCourante) {
 		double prixAvantTaxes = 0;
 		double prixApresTaxes;
+		boolean valide = true;
+		String erreur = "\nCommande incorrecte\n" + 
+				commandeCourante.getNomClient() + " " +
+				commandeCourante.getNomPlat() +  " " +
+				commandeCourante.getNbPlats() + "\n";
 		
 		if (clientExiste(commandeCourante) && platExiste(commandeCourante) && commandeCourante.getNbPlats() > 0) {
 			
@@ -77,26 +82,21 @@ public class LireEnvoyerCommandes {
 		} else {
 			
 			if(!clientExiste(commandeCourante)) {
-				erreurs.add(commandeCourante.getNomClient() + " " + 
-						commandeCourante.getNomPlat() + " " + 
-						commandeCourante.getNbPlats() + 
-						" - Le client " + commandeCourante.getNomClient() + " n'existe pas.");
+				valide = false;
+				erreur += "Le client " + commandeCourante.getNomClient() + " n'existe pas. ";
 			}
 			
 			if(!platExiste(commandeCourante)) {
-				erreurs.add(commandeCourante.getNomClient() + " " + 
-						commandeCourante.getNomPlat() + " " + 
-						commandeCourante.getNbPlats() + 
-						" - Le plat " + commandeCourante.getNomPlat() + " n'existe pas.");
+				erreur += "Le plat " + commandeCourante.getNomPlat() + " n'existe pas. ";
 			}
 			
 			if(commandeCourante.getNbPlats() == 0) {
-				erreurs.add(commandeCourante.getNomClient() + " " + 
-						commandeCourante.getNomPlat() + " " + 
-						commandeCourante.getNbPlats() + 
-						" - Le client doit commander au moins un plat.");
+				erreur += "Le client doit commander au moins un plat. ";
 			}
 
+			if(!valide) {
+				erreurs.add(erreur);
+			}
 		}
 			
 	}
