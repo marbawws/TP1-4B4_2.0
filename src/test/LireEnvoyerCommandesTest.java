@@ -166,12 +166,12 @@ public class LireEnvoyerCommandesTest {
 	@Test
 	public void testerDateEtHeure() {
 		//trouver la date et l'heure
-		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy-HH:mm:ss");  
+		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy-HH");  
 		TimeZone EST = TimeZone.getTimeZone("EST");
 		Calendar maintenant = Calendar.getInstance(EST);
 		Date date = maintenant.getTime();
 		//trouver le fichier avec la date et l'heure du format suivant dd/MM/yyyy-HH, s'il n'existe pas le test est faux
-		//nomFichierFacture = "Fichier-du-" + formatter.format(date) +".txt"; dé-commentter cette ligne quand la tache 2 sera implementer pour que les tests est le bon nom du fichier
+		nomFichierFacture = "Fichier-du-" + formatter.format(date) +".txt"; 
 		File file = new File("Fichier-du-" + formatter.format(date) +".txt");
 		if (!(file.exists())) {
 			fail();
