@@ -87,10 +87,12 @@ public class LireEnvoyerCommandes {
 			}
 			
 			if(!platExiste(commandeCourante)) {
+				valide = false;
 				erreur += "Le plat " + commandeCourante.getNomPlat() + " n'existe pas. ";
 			}
 			
 			if(commandeCourante.getNbPlats() == 0) {
+				valide = false;
 				erreur += "Le client doit commander au moins un plat. ";
 			}
 
