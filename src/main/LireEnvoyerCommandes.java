@@ -181,7 +181,7 @@ public class LireEnvoyerCommandes {
 	 * Écrit le contenu de la sortie dans un fichier nommé Facture-du-date-heure.txt.
 	 */	
 	public static void ecrireFicSortie(String[] sortie) throws IOException {
-		SimpleDateFormat formatter = new SimpleDateFormat("dd_MM_yyyy-HH_mm_ss");  
+		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy-HH");  
 		TimeZone EST = TimeZone.getTimeZone("EST");
 		Calendar maintenant = Calendar.getInstance(EST);
 		Date date = maintenant.getTime();
