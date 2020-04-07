@@ -38,8 +38,8 @@ public class LireEnvoyerCommandesTest {
 		assertArrayEquals(factureAttendu, factureRecue);// faire le test avec le output voulu
 	}
 	*/
-	
-	@Test
+	//obselete : testerAffichageCommandesIncorrectes() la remplace. taches 1 et 3 sont similaires donc le test 3 agit comme test 1 aussi
+	/*@Test
 	public void testerSiCommandesIncorrectes() throws IOException {
 		String[] input1 = { "Clients :", "Roger", "Céline", "Steeve", "Plats :", "Poutine 10.5",
 				"Frites 2.5", "Repas_Poulet 15.75", "Commandes :", "Roger boisson 4", "Céline glace 2",
@@ -59,16 +59,18 @@ public class LireEnvoyerCommandesTest {
 		String[] input6 = { "Clients :", "Roger", "Céline", "Steeve", "Plats :", "Poutine 10.5",
 				"Frites 2.5", "Repas_Poulet 15.75", "Commandes :", "bob glace -1", "Céline Frites 2",
 				"Céline Repas_Poulet 1", "Fin" }; // cas6: seulement une commande est erronee
+		System.out.println("\ntest 1\n");
 		testerSiCommandeIncorrecte(input1);
 		testerSiCommandeIncorrecte(input2);
 		testerSiCommandeIncorrecte(input3);
 		testerSiCommandeIncorrecte(input4);
 		testerSiCommandeIncorrecte(input5);
 		testerSiCommandeIncorrecte(input6);
+		System.out.println("\ntest 1 fonctionnel\n");
 		
 		
 		
-	}
+	}*/
 	
 	private void testerSiCommandeIncorrecte(String[] input) throws IOException {
 		changerInput(input);//changer le fichier entree pour faire nos tests
@@ -171,11 +173,21 @@ public class LireEnvoyerCommandesTest {
 		Calendar maintenant = Calendar.getInstance(EST);
 		Date date = maintenant.getTime();
 		//trouver le fichier avec la date et l'heure du format suivant dd/MM/yyyy-HH, s'il n'existe pas le test est faux
-		nomFichierFacture = "Fichier-du-" + formatter.format(date) +".txt"; 
-		File file = new File("Fichier-du-" + formatter.format(date) +".txt");
+		System.out.println("\ntest 2\n");
+		File file = new File("Facture-du-" + formatter.format(date) +".txt");
 		if (!(file.exists())) {
 			fail();
-		} 	
+		} else {
+			System.out.println("\ntest 2 fonctionnel\n");
+		}
+	}
+	
+	private void modifierFichierSortie(){
+		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy-HH");  
+		TimeZone EST = TimeZone.getTimeZone("EST");
+		Calendar maintenant = Calendar.getInstance(EST);
+		Date date = maintenant.getTime();
+		nomFichierFacture = "Facture-du-" + formatter.format(date) +".txt"; 
 	}
 	
 	/**
@@ -200,21 +212,18 @@ public class LireEnvoyerCommandesTest {
 		String[] input5 = { "Clients :", "Roger", "Céline", "Steeve", "Plats :", "Poutine 10.5",
 				"Frites 2.5", "Repas_Poulet 15.75", "Commandes :", "Roger Poutine 0", "Céline Frites -2",
 				"Céline Repas_Poulet d>", "Fin" }; // cas5: les noms des plats et les noms des clients et les chiffres sont invalides
-		String[] input6 = { "Clients :", "Roger", "Céline", "Steeve", "Plats :", "Poutine 10.5",
-				"Frites 2.5", "Repas_Poulet 15.75", "Commandes :", "bob glace -1", "Céline Frites 2",
-				"Céline Repas_Poulet 1", "Fin" }; // cas6: seulement une commande est erronee
-		String[] factureAttendue1 = { "Bienvenue chez Barette!", "Factures :", "", "Commande Incorrecte", "Commande Incorrecte", "Commande Incorrecte" }; // le output que l'on veut avoir;
-		String[] factureAttendue2 = { "Bienvenue chez Barette!", "Factures :", "", "Commande Incorrecte", "Commande Incorrecte", "Commande Incorrecte" }; // le output que l'on veut avoir;
-		String[] factureAttendue3 = { "Bienvenue chez Barette!", "Factures :", "", "Commande Incorrecte", "Commande Incorrecte", "Commande Incorrecte" }; // le output que l'on veut avoir;
-		String[] factureAttendue4 = { "Bienvenue chez Barette!", "Factures :", "", "Commande Incorrecte", "Commande Incorrecte", "Commande Incorrecte" }; // le output que l'on veut avoir;
-		String[] factureAttendue5 = { "Bienvenue chez Barette!", "Factures :", "", "Commande Incorrecte", "Commande Incorrecte", "Commande Incorrecte" }; // le output que l'on veut avoir;
-		String[] factureAttendue6 = { "Bienvenue chez Barette!", "Factures :", "", "Commande Incorrecte", "Céline 20.75$", "Steeve 0.00$"}; // le output que l'on veut avoir;
+		String[] factureAttendue1 = { "Commande incorrecte", "Commande incorrecte", "Commande incorrecte", }; // le output que l'on veut avoir;
+		String[] factureAttendue2 = { "Commande incorrecte", "Commande incorrecte", "Commande incorrecte", }; // le output que l'on veut avoir;
+		String[] factureAttendue3 = { "Commande incorrecte", "Commande incorrecte", "Commande incorrecte", }; // le output que l'on veut avoir;
+		String[] factureAttendue4 = { "Commande incorrecte", "Commande incorrecte", "Commande incorrecte", }; // le output que l'on veut avoir;
+		String[] factureAttendue5 = { "Commande incorrecte", "Commande incorrecte", "Commande incorrecte", }; // le output que l'on veut avoir;
+		System.out.println("\ntest 3\n");
 		testerAffichageCommandeIncorrecte(input1, factureAttendue1);
 		testerAffichageCommandeIncorrecte(input2, factureAttendue2);
 		testerAffichageCommandeIncorrecte(input3, factureAttendue3);
 		testerAffichageCommandeIncorrecte(input4, factureAttendue4);
 		testerAffichageCommandeIncorrecte(input5, factureAttendue5);
-		testerAffichageCommandeIncorrecte(input6, factureAttendue6);
+		System.out.println("\ntest 3 fonctionnels\n");
 		
 	}
 	
@@ -222,11 +231,12 @@ public class LireEnvoyerCommandesTest {
 		changerInput(input);//changer le fichier entree pour faire nos tests
 		LireEnvoyerCommandes.main(null);//appeler main pour faire le traitement		
 		changerInput(inputOriginal);// reset le fichierEntree 
+		modifierFichierSortie();
 		String[] factureRecue = lireSortieFacture();//recuperer le resultat	
 		
-		assertEquals(factureAttendue[3], factureRecue[3]);// 3 est ligne ou on lit Commande Incorrecte la ligne qui suit donne l'explication de l'erreur
-		assertEquals(factureAttendue[4], factureRecue[5]);// 4 est ligne ou on lit Commande Incorrecte la ligne qui suit donne l'explication de l'erreur, pour la facture 6 elle lit le nom
-		assertEquals(factureAttendue[5], factureRecue[6]);// 5 est ligne ou on lit Commande Incorrecte la ligne qui suit donne l'explication de l'erreur, pour la facture 6 elle lit le nom	
+		assertEquals(factureAttendue[0], factureRecue[4]);// 3 est ligne ou on lit Commande Incorrecte la ligne qui suit donne l'explication de l'erreur
+		assertEquals(factureAttendue[1], factureRecue[8]);// 4 est ligne ou on lit Commande Incorrecte la ligne qui suit donne l'explication de l'erreur, pour la facture 6 elle lit le nom
+		assertEquals(factureAttendue[2], factureRecue[12]);// 5 est ligne ou on lit Commande Incorrecte la ligne qui suit donne l'explication de l'erreur, pour la facture 6 elle lit le nom	
 	}
 
 	

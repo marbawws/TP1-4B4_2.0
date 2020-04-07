@@ -39,7 +39,8 @@ public class LireEnvoyerCommandes {
 				String[] facture = creerSortie();
 				ecrireFicSortie(facture);
 				afficherContenuTableau(facture);
-				
+				erreurs.clear();//pour tests pcq cette arraylist est static
+				factures.clear();//pour tests pcq cette arraylist est static
 			} else {
 				System.out.println("Le fichier ne respecte pas le format demandé !\nArrêt du programme.");
 			}
@@ -66,18 +67,27 @@ public class LireEnvoyerCommandes {
 	public static void traiterCommande(Commande commandeCourante) {
 		double prixAvantTaxes = 0;
 		double prixApresTaxes;
-<<<<<<< HEAD
-=======
+		boolean clientDoublonTrouve = false;
 		boolean valide = true;
 		String erreur = "\nCommande incorrecte\n" + 
 				commandeCourante.getNomClient() + " " +
 				commandeCourante.getNomPlat() +  " " +
 				commandeCourante.getNbPlats() + "\n";
 		
->>>>>>> 4b55f100ed46e69b0ae36c70fb63b618e629e0d5
 		if (clientExiste(commandeCourante) && platExiste(commandeCourante) && commandeCourante.getNbPlats() > 0) {
 			
 			prixAvantTaxes = commandeCourante.getPrixPlat() * commandeCourante.getNbPlats();
+			
+			for (int i = 0; i < factures.size() && !clientDoublonTrouve; i++) {
+				
+				if (factures.get(i).contains(commandeCourante.getNomClient())) { //si le client a deja une facture on va rajouter le prix a cette facture
+					String[] infoFacture = factures.get(i).split(" "); //recevoir nom dans l'indice 0 et prix dans l'indice 1
+					double prixFacture = Double.parseDouble(infoFacture[1].substring(0, infoFacture[1].length() - 1));
+					prixAvantTaxes += prixFacture;
+					factures.remove(i);
+					clientDoublonTrouve = true;
+				}
+			}
 			
 			factures.add(commandeCourante.getNomClient() + " " +
 				String.format("%.2f", prixAvantTaxes) + "$");
@@ -85,8 +95,7 @@ public class LireEnvoyerCommandes {
 		} else {
 			
 			if(!clientExiste(commandeCourante)) {
-<<<<<<< HEAD
-=======
+
 				valide = false;
 				erreur += "Le client " + commandeCourante.getNomClient() + " n'existe pas. ";
 			}
@@ -95,7 +104,7 @@ public class LireEnvoyerCommandes {
 				valide = false;
 				erreur += "Le plat " + commandeCourante.getNomPlat() + " n'existe pas. ";
 			}
->>>>>>> 4b55f100ed46e69b0ae36c70fb63b618e629e0d5
+
 			
 			if(commandeCourante.getNbPlats() == 0) {
 				valide = false;

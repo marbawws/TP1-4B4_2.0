@@ -1,8 +1,0 @@
-Bienvenue chez Barette!
-
-Erreurs :
-Roger Poutine 0 - Le client doit commander au moins un plat.
-
-Factures :
-Céline 5.00$
-Steeve 15.75$
