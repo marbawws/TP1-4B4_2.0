@@ -1,0 +1,12 @@
+prixFacture -= (prixFacture * (14.975 / 100)); //enlever taxes
+
+prixApresTaxes = calculerTaxes(prixAvantTaxes);
+			
+			factures.add(commandeCourante.getNomClient() + " " +
+				String.format("%.2f", prixApresTaxes) + "$");
+
+public static double calculerTaxes(double prixAvantTaxes) {
+		double prixApresTaxes;
+		prixApresTaxes =  prixAvantTaxes + (prixAvantTaxes * (14.975 / 100));
+		return prixApresTaxes;
+	}

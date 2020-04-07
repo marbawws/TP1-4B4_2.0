@@ -67,6 +67,7 @@ public class LireEnvoyerCommandes {
 	public static void traiterCommande(Commande commandeCourante) {
 		double prixAvantTaxes = 0;
 		double prixApresTaxes;
+		double prixFactureDoublon = 0;
 		boolean clientDoublonTrouve = false;
 		boolean valide = true;
 		String erreur = "\nCommande incorrecte\n" + 
@@ -82,15 +83,16 @@ public class LireEnvoyerCommandes {
 				
 				if (factures.get(i).contains(commandeCourante.getNomClient())) { //si le client a deja une facture on va rajouter le prix a cette facture
 					String[] infoFacture = factures.get(i).split(" "); //recevoir nom dans l'indice 0 et prix dans l'indice 1
-					double prixFacture = Double.parseDouble(infoFacture[1].substring(0, infoFacture[1].length() - 1));
-					prixAvantTaxes += prixFacture;
+					prixFactureDoublon = Double.parseDouble(infoFacture[1].substring(0, infoFacture[1].length() - 1));					
 					factures.remove(i);
 					clientDoublonTrouve = true;
 				}
 			}
 			
+			prixApresTaxes = calculerTaxes(prixAvantTaxes);
+			prixApresTaxes += prixFactureDoublon;// le prix factureDoublon contient deja des taxes donc aucun besoin de les calculer.
 			factures.add(commandeCourante.getNomClient() + " " +
-				String.format("%.2f", prixAvantTaxes) + "$");
+					String.format("%.2f", prixApresTaxes) + "$");
 			
 		} else {
 			
@@ -118,14 +120,10 @@ public class LireEnvoyerCommandes {
 			
 	}
 	
-	public static double calculerTaxes(double montantAvantTaxes) {
-		/*
-		 * Voici une coquille de méthode qui calcule les taxes.
-		 * Évidemment, je ne fais que suggérer une façon de gérer les taxes.
-		 * J'ai également ajouté un squelette dans creerFacture.
-		 * N'hésite pas à utiliser une structure différente si celle-ci ne fonctionne pas.
-		 */
-		return 0;
+	public static double calculerTaxes(double prixAvantTaxes) {
+		double prixApresTaxes;
+		prixApresTaxes =  prixAvantTaxes + (prixAvantTaxes * (14.975 / 100));
+		return prixApresTaxes;
 	}
 	
 	/*
