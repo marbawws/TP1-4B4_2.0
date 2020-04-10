@@ -1,0 +1,17 @@
+Bienvenue chez Barette!
+
+Erreurs :
+
+Commande incorrecte
+Roger Poutin 1
+Le plat Poutin n'existe pas. 
+
+Commande incorrecte
+Célin Frites 2
+Le client Célin n'existe pas. 
+
+Commande incorrecte
+Steeve Repas_Poulet 0
+Le client doit commander au moins un plat. 
+
+Factures :

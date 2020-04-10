@@ -1,8 +1,7 @@
 -- Commandes incorrectes --
     
     Une commande est incorrecte si le nom du client ou du plat n'est pas dans 
-    la liste de clients/plats ou si la quantité de plats commandés n'est pas 
-    valide (par exemple, un nombre négatif, 0 ou un caractère non-numérique).
+    la liste de clients/plats ou si aucun plat n'a été commandé.
 
 -- Affichage de la facture sur le terminal et dans le fichier --
 
@@ -17,17 +16,17 @@
     
     Voici le format à respecter:
 
-        Erreurs :
-        NOM_DU_CLIENT NOM_DU_PLAT QTÉ - DESCRIPTION DE L'ERREUR
-
-    Exemples d'erreurs :
+        Bienvenue chez Barette!
 
         Erreurs :
-        François Poutine 1 - Le client « François » n'existe pas
-        Steeve Hamburger 3 - Le plat « Hamburger » n'existe pas
-        Céline Poutine -1 -  « -1 » n'est pas une quantité valide.
-        Roger Frites a - « a » n'est pas une quantité valide.
-        Gordon Repas_Poulet 0 - « 0 » n'est pas une quantité valide.
+
+        Commande incorrecte
+        Roge Poutin 1
+        Le plat Poutin n'existe pas. Le Client Roge n'existe pas.
+
+        Factures :
+
+        ...
 
 -- Questions --
 
