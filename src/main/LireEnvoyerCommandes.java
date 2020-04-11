@@ -6,8 +6,6 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -18,14 +16,16 @@ import java.util.TimeZone;
 import outilsjava.OutilsFichier;
 
 public class LireEnvoyerCommandes {
+	
+	//TODO Rendre ces variables d'instance privées et créer des get/set.
+	private static final String LIGNE_CLIENTS_ENTREE = "Clients :";
+	private static final String LIGNE_PLATS_ENTREE = "Plats :";
+	private static final String LIGNE_COMMANDES_ENTREE = "Commandes :";
 
 	public static ArrayList<Client> listeClients = new ArrayList<Client>();
 	public static ArrayList<Plat> listePlats = new ArrayList<Plat>();
 	public static ArrayList<Commande> listeCommandes = new ArrayList<Commande>();
 
-	private static final String LIGNE_CLIENTS_ENTREE = "Clients :";
-	private static final String LIGNE_PLATS_ENTREE = "Plats :";
-	private static final String LIGNE_COMMANDES_ENTREE = "Commandes :";
 	
 	public static ArrayList<String> erreurs = new ArrayList<String>();
 	public static ArrayList<String> factures = new ArrayList<String>();
@@ -62,6 +62,7 @@ public class LireEnvoyerCommandes {
 			System.out.println(ligneSortie);
 		}
 	}
+	
 	
 	
 	/*
@@ -204,7 +205,7 @@ public class LireEnvoyerCommandes {
         Object[] tabObj = tab.toArray(); 
   
         // Convertir le tableau d'objets en tableau de chaînes.
-        String[] tabStr = Arrays .copyOf(tabObj, tabObj.length, String[].class); 
+        String[] tabStr = Arrays.copyOf(tabObj, tabObj.length, String[].class); 
   
         return tabStr; 
     } 
@@ -240,7 +241,7 @@ public class LireEnvoyerCommandes {
 	 * Cherche dans la liste de plats et retourne l'index du plat indiqué en
 	 * paramètre. Retourne -1 si le plat n'existe pas.
 	 */
-	private static int chercherIndexPlat(String nomPlat) {
+	public static int chercherIndexPlat(String nomPlat) {
 		int index = -1;
 
 		for (int i = 0; i < listePlats.size(); i++) {
@@ -257,7 +258,7 @@ public class LireEnvoyerCommandes {
 	 * Cherche dans la liste de clients et retourne l'index du client indiqué en
 	 * paramètre. Retourne -1 si le client n'existe pas.
 	 */
-	private static int chercherIndexClient(String nomClient) {
+	public static int chercherIndexClient(String nomClient) {
 		int index = -1;
 
 		for (int i = 0; i < listeClients.size(); i++) {

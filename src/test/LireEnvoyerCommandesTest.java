@@ -77,7 +77,7 @@ public class LireEnvoyerCommandesTest {
 	}*/
 	
 	@Test
-	public void testFormatFic() throws IOException {
+	public void testVerifierFormatFic() throws IOException {
 		
 		//Cas 1 : La ligne "Clients :" n'existe pas.
 		String[] test1 = {"Roger", "Céline", "Steeve", "Plats :", "Poutine 10.5",
@@ -109,14 +109,6 @@ public class LireEnvoyerCommandesTest {
 		
 	}
 	
-	private void testerSiCommandeIncorrecte(String[] input) throws IOException {
-		changerInput(input);//changer le fichier entree pour faire nos tests
-		LireEnvoyerCommandes.main(null);//appeler main pour faire le traitement		
-		changerInput(inputOriginal);// reset le fichierEntree 
-		String[] factureRecue = lireSortieFacture();//recuperer le resultat		
-		assertEquals("Commande Incorrecte", factureRecue[0]);
-	}
-	
 	@Test
 	public void testPrix0() throws IOException {
 		//S'assurer qu'il ne reste aucune donnée des autres tests.
@@ -137,9 +129,9 @@ public class LireEnvoyerCommandesTest {
 		Commande[] test3 = {new Commande("Roger", "Hamburger", 0, 0)};
 		Commande[] test4 = {new Commande("Roger", "Hamburger", 3, 0)};
 		Commande[] test5 = {new Commande("Roger", "Hamburger", 1, 0),
-							new Commande("Roger", "Soupe", 1, 0)};
+				new Commande("Roger", "Soupe", 1, 0)};
 		Commande[] test6 = {new Commande("Roger", "Hamburger", 1, 0),
-							new Commande("Roger", "Poutine", 1, 10.5)};
+				new Commande("Roger", "Poutine", 1, 10.5)};
 		
 		//Cas 1 : Un plat ayant un prix > 0$ est commandé 0 fois.
 		assertTrue(creerFacture(test1).isEmpty());
@@ -161,7 +153,7 @@ public class LireEnvoyerCommandesTest {
 	}
 	
 	//Popule la liste factures de LireEnvoyerCommandes avec le tableau de commandes donné en paramètre.
-	public ArrayList<String> creerFacture(Commande[] tabCommandes) throws IOException {
+	private ArrayList<String> creerFacture(Commande[] tabCommandes) throws IOException {
 		
 		//S'assurer qu'il ne reste rien des autres tests.
 		LireEnvoyerCommandes.listeCommandes.clear();
@@ -175,9 +167,9 @@ public class LireEnvoyerCommandesTest {
 		
 		return LireEnvoyerCommandes.factures;
 	}
-	
+
 	@Test
-	public void testCalculerTaxes() throws IOException {
+	public void testCalculerTaxes() {
 		
 		//Cas 1 : Taxe sur une commande de 1$
 		assertEquals(1.15, LireEnvoyerCommandes.calculerTaxes(1), 0.00);
@@ -188,6 +180,72 @@ public class LireEnvoyerCommandesTest {
 		//Cas 3 : Taxe sur une commande ayant un prix élevé
 		assertEquals(11497.50, LireEnvoyerCommandes.calculerTaxes(10000), 0.00);
 	}
+
+	@Test
+	public void testChercherIndexClient() {
+		//S'assurer qu'il ne reste aucune donnée des autres tests.
+		LireEnvoyerCommandes.listeClients.clear();		
+		LireEnvoyerCommandes.listePlats.clear();
+		
+		//Créer les données qui seront utilisées dans les tests.
+		LireEnvoyerCommandes.listeClients.add(new Client("Roger"));
+		LireEnvoyerCommandes.listeClients.add(new Client("Nathan"));
+		LireEnvoyerCommandes.listeClients.add(new Client("Chloe"));
+		
+		//Cas 1 : Chercher le client situé au début de la liste.
+		assertEquals(0, LireEnvoyerCommandes.chercherIndexClient("Roger"));
+		
+		//Cas 2 : Chercher le client situé au milieu de la liste.
+		assertEquals(1, LireEnvoyerCommandes.chercherIndexClient("Nathan"));
+		
+		//Cas 3 : Chercher le client situé à la fin de la liste.
+		assertEquals(2, LireEnvoyerCommandes.chercherIndexClient("Chloe"));
+		
+		//Cas 4 : Chercher un client qui n'existe pas.
+		assertEquals(-1, LireEnvoyerCommandes.chercherIndexClient("Elena"));
+	}
+	
+	@Test
+	public void testClientExiste() {
+		//S'assurer qu'il ne reste aucune donnée des autres tests.
+		LireEnvoyerCommandes.listeClients.clear();		
+		LireEnvoyerCommandes.listePlats.clear();
+		
+		//Créer les données qui seront utilisées dans les tests.
+		LireEnvoyerCommandes.listeClients.add(new Client("Roger")); 
+		
+		//Cas 1 : Le client est dans la liste.
+		assertTrue(LireEnvoyerCommandes.clientExiste(new Commande("Roger", "Poutine", 1)));
+		
+		//Cas 2 : Le client n'est pas dans la liste.
+		assertFalse(LireEnvoyerCommandes.clientExiste(new Commande("Nathan", "Poutine", 1)));
+	}
+	
+	@Test
+	public void testPlatExiste() {
+		//S'assurer qu'il ne reste aucune donnée des autres tests.
+		LireEnvoyerCommandes.listeClients.clear();		
+		LireEnvoyerCommandes.listePlats.clear();
+		
+		//Créer les données qui seront utilisées dans les tests.
+		LireEnvoyerCommandes.listePlats.add(new Plat("Poutine", 0)); 
+		
+		//Cas 1 : Le plat est dans la liste.
+		assertTrue(LireEnvoyerCommandes.platExiste(new Commande("Roger", "Poutine", 1)));
+		
+		//Cas 2 : Le plat n'est pas dans la liste.
+		assertFalse(LireEnvoyerCommandes.platExiste(new Commande("Nathan", "Mochi", 1)));
+	}
+	
+	
+	private void testerSiCommandeIncorrecte(String[] input) throws IOException {
+		changerInput(input);//changer le fichier entree pour faire nos tests
+		LireEnvoyerCommandes.main(null);//appeler main pour faire le traitement		
+		changerInput(inputOriginal);// reset le fichierEntree 
+		String[] factureRecue = lireSortieFacture();//recuperer le resultat		
+		assertEquals("Commande Incorrecte", factureRecue[0]);
+	}
+	
 	
 	private void testerCommandeIncorrecte(String[] input, String[] factureAttendue) throws IOException{
 		changerInput(input);//changer le fichier entree pour faire nos tests
