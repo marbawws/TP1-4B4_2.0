@@ -15,6 +15,14 @@ public class Commande {
 		this.setPrixPlat(0);
 	}
 
+	/*Surcharge créée à des fins de test.*/
+	public Commande(String nomClient, String nomPlat, int nbPlats, double prixPlat) {
+		this.setNomClient(nomClient);
+		this.setNomPlat(nomPlat);
+		this.setNbPlats(nbPlats);
+		this.setPrixPlat(prixPlat);
+	}
+	
 	/* Retourne le nom du client */
 	public String getNomClient() {
 		return this.nomClient;

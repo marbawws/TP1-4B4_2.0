@@ -2,6 +2,8 @@ package main;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -91,8 +93,11 @@ public class LireEnvoyerCommandes {
 			
 			prixApresTaxes = calculerTaxes(prixAvantTaxes);
 			prixApresTaxes += prixFactureDoublon;// le prix factureDoublon contient deja des taxes donc aucun besoin de les calculer.
-			factures.add(commandeCourante.getNomClient() + " " +
-					String.format("%.2f", prixApresTaxes) + "$");
+			
+			if (prixApresTaxes > 0) {
+				factures.add(commandeCourante.getNomClient() + " " +
+					prixApresTaxes + "$");
+			}
 			
 		} else {
 			
@@ -120,10 +125,15 @@ public class LireEnvoyerCommandes {
 			
 	}
 	
+	
 	public static double calculerTaxes(double prixAvantTaxes) {
 		double prixApresTaxes;
+		DecimalFormat df = new DecimalFormat("0.00"); //Définition du format de la sortie : deux décimales.
+		df.setRoundingMode(RoundingMode.UP); //Modifier le format pour arrondir les valeurs vers le haut.
+		
 		prixApresTaxes =  prixAvantTaxes + (prixAvantTaxes * (14.975 / 100));
-		return prixApresTaxes;
+		
+		return Double.valueOf(df.format(prixApresTaxes)); //Application du format de la sortie.
 	}
 	
 	/*
@@ -186,9 +196,9 @@ public class LireEnvoyerCommandes {
         Object[] tabObj = tab.toArray(); 
   
         // Convertir le tableau d'objets en tableau de chaînes.
-        String[] str = Arrays .copyOf(tabObj, tabObj.length, String[].class); 
+        String[] tabStr = Arrays .copyOf(tabObj, tabObj.length, String[].class); 
   
-        return str; 
+        return tabStr; 
     } 
 	
 	
@@ -263,6 +273,7 @@ public class LireEnvoyerCommandes {
 			} else if (tableauInformation[i].equals(LIGNE_COMMANDES_ENTREE)) {
 				mode = "Commandes";
 			} else {
+				
 				switch (mode) {
 				case "Clients":
 					listeClients.add(new Client(tableauInformation[i]));

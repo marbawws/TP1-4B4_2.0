@@ -7,13 +7,17 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
 import org.junit.Test;
 
+import main.Client;
+import main.Commande;
 import main.LireEnvoyerCommandes;
+import main.Plat;
 import outilsjava.OutilsFichier;
 
 public class LireEnvoyerCommandesTest {
@@ -82,69 +86,74 @@ public class LireEnvoyerCommandesTest {
 	
 	@Test
 	public void testSiPrix0() throws IOException {
+		//S'assurer qu'il ne reste aucune donnée des autres tests.
+		LireEnvoyerCommandes.listeClients.clear();		
+		LireEnvoyerCommandes.listePlats.clear();
+		
+		//Créer les données qui seront utilisées dans les tests.
+		LireEnvoyerCommandes.listeClients.add(new Client("Roger")); 
+		
+		LireEnvoyerCommandes.listePlats.add(new Plat("Poutine", 10.5));
+		LireEnvoyerCommandes.listePlats.add(new Plat("Hamburger", 0));
+		LireEnvoyerCommandes.listePlats.add(new Plat("Soupe", 0));
+		
+		//Des tableaux sont utilisés au cas où le test comporte plusieurs commandes.
+		//Utilisation de la surcharge (nomClient, nomPlat, nbPlats, prixPlat) du constructeur de Commande.
+		Commande[] commandesTest1 = new Commande[] {new Commande("Roger", "Poutine", 0, 10.5)};
+		Commande[] commandesTest2 = new Commande[] {new Commande("Roger", "Poutine", 1, 10.5)};
+		Commande[] commandesTest3 = new Commande[] {new Commande("Roger", "Hamburger", 0, 0)};
+		Commande[] commandesTest4 = new Commande[] {new Commande("Roger", "Hamburger", 3, 0)};
+		Commande[] commandesTest5 = new Commande[] {new Commande("Roger", "Hamburger", 1, 0),
+													new Commande("Roger", "Soupe", 1, 0)};
+		Commande[] commandesTest6 = new Commande[] {new Commande("Roger", "Hamburger", 1, 0),
+													new Commande("Roger", "Poutine", 1, 10.5)};
+		
 		//Cas 1 : Un plat ayant un prix > 0$ est commandé 0 fois.
-		String[] input1 = { "Clients :", "Roger", 
-							"Plats :", "Poutine 10.5",
-							"Commandes :", "Roger Poutine 0", 
-							"Fin" };
-		//Cas 2 : Un plat ayant un prix de 0$ est commandé > 0 fois.
-		String[] input2 = { "Clients :", "Roger", 
-							"Plats :", "Poutine 0",
-							"Commandes :", "Roger Poutine 3", 
-							"Fin" };
+		assertTrue(creerFacture(commandesTest1).isEmpty());
+		
+		//Cas 2 : Un plat ayant un prix > 0$ est commandé > 0 fois.
+		assertFalse(creerFacture(commandesTest2).isEmpty());
+		
 		//Cas 3 : Un plat ayant un prix de 0$ est commandé 0 fois.
-		String[] input3 = { "Clients :", "Roger", 
-							"Plats :", "Poutine 0",
-							"Commandes :", "Roger Poutine 0", 
-							"Fin" };
-		//Cas 4 : Un plat ayant un prix > 0$ est commandé > 0 fois.
-		String[] input4 = { "Clients :", "Roger", 
-							"Plats :", "Poutine 1",
-							"Commandes :", "Roger Poutine 1", 
-							"Fin" };
+		assertTrue(creerFacture(commandesTest3).isEmpty());
 		
-		String[] factureAttendue1 = { "Bienvenue chez Barette!", "Factures :", "", "" };
-		String[] factureAttendue2 = { "Bienvenue chez Barette!", "Factures :", "", "" };
-		String[] factureAttendue3 = { "Bienvenue chez Barette!", "Factures :", "", "" };
-		String[] factureAttendue4 = { "Bienvenue chez Barette!", "Factures :", "", "Roger 1.00$" };
+		//Cas 4 : Un plat ayant un prix de 0$ est commandé > 0 fois.
+		assertTrue(creerFacture(commandesTest4).isEmpty());
 		
-		testerCommandeIncorrecte(input1, factureAttendue1);
-		testerCommandeIncorrecte(input2, factureAttendue2);
-		testerCommandeIncorrecte(input3, factureAttendue3);
-		testerCommandeIncorrecte(input4, factureAttendue4);
+		//Cas 5 : Un seul client commande 2 plats à 0$.
+		assertTrue(creerFacture(commandesTest5).isEmpty());
+		
+		//Cas 6 : Un seul client commande un plat à 0$ et un plat à plus que 0$.
+		assertEquals("Roger 12.08$", creerFacture(commandesTest6).get(0));
+	}
+	
+	//Popule la liste factures de LireEnvoyerCommandes avec le tableau de commandes donné en paramètre.
+	public ArrayList<String> creerFacture(Commande[] tabCommandes) throws IOException {
+		
+		//S'assurer qu'il ne reste rien des autres tests.
+		LireEnvoyerCommandes.listeCommandes.clear();
+		LireEnvoyerCommandes.factures.clear();
+		
+		for (Commande commande : tabCommandes) {
+			LireEnvoyerCommandes.listeCommandes.add(commande);
+		}
+		
+		LireEnvoyerCommandes.creerSortie();
+		
+		return LireEnvoyerCommandes.factures;
 	}
 	
 	@Test
 	public void testCalculerTaxes() throws IOException {
 		
-		/*
 		//Cas 1 : Taxe sur une commande de 1$
-		String[] input1 = { "Clients :", "Roger", 
-				"Plats :", "Poutine 1",
-				"Commandes :", "Roger Poutine 1", 
-				"Fin" };
+		assertEquals(1.15, (LireEnvoyerCommandes.calculerTaxes(1)), 0.00);
 		
 		//Cas 2 : Taxe sur une commande > 1$
-		String[] input2 = { "Clients :", "Roger", 
-				"Plats :", "Poutine 5",
-				"Commandes :", "Roger Poutine 1", 
-				"Fin" };
+		assertEquals(5.75, LireEnvoyerCommandes.calculerTaxes(5), 0.00);
 		
 		//Cas 3 : Taxe sur une commande ayant un prix élevé
-		String[] input3 = { "Clients :", "Roger", 
-				"Plats :", "Poutine 10000",
-				"Commandes :", "Roger Poutine 1", 
-				"Fin" };
-		 */
-		
-		//Cas 1 : Taxe sur une commande de 1$
-		assertEquals(1.15, LireEnvoyerCommandes.calculerTaxes(1));
-		
-		//Cas 2 : Taxe sur une commande > 1$
-		assertEquals(5.75, LireEnvoyerCommandes.calculerTaxes(5));
-		
-		//Cas 3 : Taxe sur une commande ayant un prix élevé
-		assertEquals(11497.50, LireEnvoyerCommandes.calculerTaxes(10000));
+		assertEquals(11497.50, LireEnvoyerCommandes.calculerTaxes(10000), 0.00);
 	}
 	
 	private void testerCommandeIncorrecte(String[] input, String[] factureAttendue) throws IOException{
