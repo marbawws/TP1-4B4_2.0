@@ -79,10 +79,6 @@ public class LireEnvoyerCommandesTest {
 	@Test
 	public void testFormatFic() throws IOException {
 		
-		//Cas contrôle.
-		String[] controle = {"Clients :", "Roger", "Céline", "Steeve", "Plats :", "Poutine 10.5",
-				"Frites 2.5", "Repas_Poulet 15.75", "Commandes :", "Roger Frites 4", "Céline Repas_Poulet 2", "Fin"};
-		
 		//Cas 1 : La ligne "Clients :" n'existe pas.
 		String[] test1 = {"Roger", "Céline", "Steeve", "Plats :", "Poutine 10.5",
 				"Frites 2.5", "Repas_Poulet 15.75", "Commandes :", "Roger boisson 4", "Céline glace 2",
@@ -104,7 +100,7 @@ public class LireEnvoyerCommandesTest {
 		//Cas 5 : Le mot "Fin" n'est pas présent à la dernière ligne du fichier.
 		String[] test5 = {"Clients :", "Plats :" ,"Commandes :"};
 		
-		assertTrue(LireEnvoyerCommandes.verifierFormatFic(controle));
+		assertTrue(LireEnvoyerCommandes.verifierFormatFic(inputOriginal)); //Cas contrôle
 		assertFalse(LireEnvoyerCommandes.verifierFormatFic(test1));
 		assertFalse(LireEnvoyerCommandes.verifierFormatFic(test2));
 		assertFalse(LireEnvoyerCommandes.verifierFormatFic(test3));
