@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import outilsjava.OutilsFichier;
@@ -128,12 +130,18 @@ public class LireEnvoyerCommandes {
 	
 	public static double calculerTaxes(double prixAvantTaxes) {
 		double prixApresTaxes;
-		DecimalFormat df = new DecimalFormat("0.00"); //Définition du format de la sortie : deux décimales.
-		df.setRoundingMode(RoundingMode.UP); //Modifier le format pour arrondir les valeurs vers le haut.
+		/*
+		Définition du format de la sortie : deux décimales.
+		La région US permet de conserver le point avant les nombres décimaux sur tous
+		les ordinateurs. Sinon, les SE en français remplacent le point par une virgule,
+		ce qui cause un NumberFormatException.
+		*/
+		DecimalFormat df = new DecimalFormat("0.00", new DecimalFormatSymbols(Locale.US));
+		df.setRoundingMode(RoundingMode.UP); //Arrondir les valeurs vers le haut.
 		
 		prixApresTaxes =  prixAvantTaxes + (prixAvantTaxes * (14.975 / 100));
 		
-		return Double.valueOf(df.format(prixApresTaxes)); //Application du format de la sortie.
+		return Double.valueOf(df.format(prixApresTaxes)); //Appliquer le format.
 	}
 	
 	/*
