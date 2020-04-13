@@ -31,20 +31,21 @@ public class LireEnvoyerCommandes {
 	public static ArrayList<String> factures = new ArrayList<String>();
 
 	public static void main(String[] args) throws IOException {
-
+		erreurs.clear();//pour tests pcq cette arraylist est static
+		factures.clear();//pour tests pcq cette arraylist est static
+		listeClients.clear();//pour tests pcq cette arraylist est static
+		listePlats.clear();//pour tests pcq cette arraylist est static
+		listeCommandes.clear();//pour tests pcq cette arraylist est static
 		String[] tableauInformation = lireFichierEtMettreDansTableau();
 		
 		if (tableauInformation != null) {
 			
 			if (verifierFormatFic(tableauInformation)) {
-				
 				creerListes(tableauInformation);
 				
 				String[] facture = creerSortie();
 				ecrireFicSortie(facture);
 				afficherContenuTableau(facture);
-				erreurs.clear();//pour tests pcq cette arraylist est static
-				factures.clear();//pour tests pcq cette arraylist est static
 			} else {
 				System.out.println("Le fichier ne respecte pas le format demandé !\nArrêt du programme.");
 			}
@@ -120,6 +121,7 @@ public class LireEnvoyerCommandes {
 				valide = false;
 				erreur += "Le client doit commander au moins un plat. ";
 			}
+			
 
 			if(!valide) {
 				erreurs.add(erreur);
