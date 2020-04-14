@@ -26,61 +26,62 @@ public class LireEnvoyerCommandesTest {
 			"Frites 2.5", "Repas_Poulet 15.75", "Commandes :", "Roger Poutine 1", "Céline Frites 2",
 			"Céline Repas_Poulet 1", "Fin" };
 	private String nomFichierFacture = "FichierSortie.txt";
-	/*
-	 * modele
-	 * 
-	 * @Test public void comparerFactures() throws IOException { // test en blackbox
-	 * String[] inputs = { "Clients :", "Roger", "Céline", "Steeve", "Plats :",
-	 * "Poutine 10.5", "Frites 2.5", "Repas_Poulet 15.75", "Commandes :",
-	 * "Roger Poutine 1", "Céline Frites 2", "Céline Repas_Poulet 1", "Fin" }; //
-	 * changer le input a guise String[] factureAttendu = {
-	 * "Bienvenue chez Barette!", "Factures :", "", "Roger 10.50$", "Céline 20.75$",
-	 * "Steeve 0.00$" } // le output que l'on veut avoir ;
-	 * changerInput(inputs);//changer le fichier entree pour faire nos tests
-	 * LireEnvoyerCommandes.main(null);//appeler main pour faire le traitement
-	 * String[] factureRecue = lireSortieFacture();//recuperer le resultat
-	 * assertArrayEquals(factureAttendu, factureRecue);// faire le test avec le
-	 * output voulu }
-	 */
 
 	@Test
 	public void testerSiCommandesIncorrectes() throws IOException {
-		String[] input1 = { "Clients :", "Roger", "Céline", "Steeve", "Plats :", "Poutine 10.5", "Frites 2.5",
-				"Repas_Poulet 15.75", "Commandes :", "Roger boisson 4", "Céline glace 2", "Steeve croquettes 2",
-				"Fin" }; // cas:1 les noms des plats n'existe pas
-		String[] input2 = { "Clients :", "Roger", "Céline", "Steeve", "Plats :", "Poutine 10.5", "Frites 2.5",
-				"Repas_Poulet 15.75", "Commandes :", "bob Poutine 4", "bobbette Frites 2", "bobino Repas_Poulet 2",
-				"Fin" }; // cas:2 les noms des clients n'existe pas
-		String[] input3 = { "Clients :", "Roger", "Céline", "Steeve", "Plats :", "Poutine 10.5", "Frites 2.5",
-				"Repas_Poulet 15.75", "Commandes :", "bob boisson 4", "bobbette glace 2", "bobino croquettes 2",
-				"Fin" }; // cas:3 les noms des plats et les noms des clients n'existent pas
-		String[] input4 = { "Clients :", "Roger", "Céline", "Steeve", "Plats :", "Poutine 10.5", "Frites 2.5",
-				"Repas_Poulet 15.75", "Commandes :", "Roger Poutine 0", "Céline Frites -2", "Céline Repas_Poulet d>",
-				"Fin" }; // cas4: les chiffres sont invalides
-		String[] input5 = { "Clients :", "Roger", "Céline", "Steeve", "Plats :", "Poutine 10.5", "Frites 2.5",
-				"Repas_Poulet 15.75", "Commandes :", "Roger Poutine 0", "Céline Frites -2", "Céline Repas_Poulet d>",
-				"Fin" }; // cas5: les noms des plats et les noms des clients et les chiffres sont
-							// invalides
-		String[] input6 = { "Clients :", "Roger", "Céline", "Steeve", "Plats :", "Poutine 10.5", "Frites 2.5",
-				"Repas_Poulet 15.75", "Commandes :", "bob glace -1", "Céline Frites 2", "Céline Repas_Poulet 1",
-				"Fin" }; // cas6: seulement une commande est erronee
-		testerSiCommandeIncorrecte(input1);
-		testerSiCommandeIncorrecte(input2);
-		testerSiCommandeIncorrecte(input3);
-		testerSiCommandeIncorrecte(input4);
-		testerSiCommandeIncorrecte(input5);
-		testerSiCommandeIncorrecte(input6);
+		
+		// S'assurer qu'il ne reste aucune donnée des autres tests.
+		LireEnvoyerCommandes.listeClients.clear();
+		LireEnvoyerCommandes.listePlats.clear();
 
-	}
+		// Créer les données qui seront utilisées dans les tests.
+		LireEnvoyerCommandes.listeClients.add(new Client("Roger"));
+		LireEnvoyerCommandes.listeClients.add(new Client("Céline"));
+		LireEnvoyerCommandes.listeClients.add(new Client("Steeve"));
 
-	private void testerSiCommandeIncorrecte(String[] input) throws IOException {
-		changerInput(input);// changer le fichier entree pour faire nos tests
-		LireEnvoyerCommandes.main(null);// appeler main pour faire le traitement
-		changerInput(inputOriginal);// reset le fichierEntree
-		modifierFichierSortie();
-		String[] factureRecue = lireSortieFacture();// recuperer le resultat
-		assertEquals("Commande incorrecte", factureRecue[4]);// on regarde seulement si le programme detecte que c'est
-																// une commande incorrecte
+		LireEnvoyerCommandes.listePlats.add(new Plat("Poutine", 10.5));
+		LireEnvoyerCommandes.listePlats.add(new Plat("Frites", 2.5));
+		LireEnvoyerCommandes.listePlats.add(new Plat("Repas_Poulet", 15.75));
+
+		// Des tableaux sont utilisés au cas où le test comporte plusieurs commandes.
+		
+		// cas:1 les noms des plats n'existe pas.
+		Commande[] test1 = { new Commande("Roger", "boisson", 4),
+				 new Commande("Céline", "glace", 2),
+				 new Commande("Steeve", "croquettes", 2)};
+		
+		// cas:2 les noms des clients n'existe pas.
+		Commande[] test2 = { new Commande("bob", "Poutine", 4),
+				 new Commande("bobette", "Poutine", 2),
+				 new Commande("bobino", "Poutine", 2)};
+		
+		// cas:3 les noms des plats et les noms des clients n'existent pas.
+		Commande[] test3 = { new Commande("bob", "boisson", 4),
+				 new Commande("bobette", "glace", 2),
+				 new Commande("bobino", "croquettes", 2)};
+		
+		// cas4: les chiffres sont invalides.
+		Commande[] test4 = { new Commande("Roger", "Poutine", -2),
+				 new Commande("Céline", "Frites", 0),
+				 new Commande("Steeve", "Repas_Poulet", 0)};
+		
+		// cas5: les noms des plats et les noms des clients et les chiffres sont invalides.
+		Commande[] test5 = { new Commande("bob", "boisson", 0),
+				 new Commande("bobette", "glace", 0),
+				 new Commande("bobino", "croquettes", -3)};
+		
+		// cas6: seulement une commande est erronee.
+		Commande[] test6 = { new Commande("bob", "boisson", 0),
+				 new Commande("Roger", "Poutine", 1),
+				 new Commande("Céline", "Frites", 3)};
+
+		
+		assertFalse(creerErreurs(test1).isEmpty());
+		assertFalse(creerErreurs(test2).isEmpty());
+		assertFalse(creerErreurs(test3).isEmpty());
+		assertFalse(creerErreurs(test4).isEmpty());
+		assertFalse(creerErreurs(test5).isEmpty());
+		assertFalse(creerErreurs(test6).isEmpty());
 	}
 
 	@Test
@@ -173,6 +174,23 @@ public class LireEnvoyerCommandesTest {
 		return LireEnvoyerCommandes.factures;
 	}
 
+	// Popule la liste erreurs de LireEnvoyerCommandes avec le tableau de commandes
+	// donné en paramètre.
+	private ArrayList<String> creerErreurs(Commande[] tabCommandes) throws IOException {
+
+		// S'assurer qu'il ne reste rien des autres tests.
+		LireEnvoyerCommandes.listeCommandes.clear();
+		LireEnvoyerCommandes.erreurs.clear();
+
+		for (Commande commande : tabCommandes) {
+			LireEnvoyerCommandes.listeCommandes.add(commande);
+		}
+
+		LireEnvoyerCommandes.creerSortie();
+
+		return LireEnvoyerCommandes.erreurs;
+	}
+	
 	@Test
 	public void testCalculerTaxes() {
 
@@ -241,25 +259,6 @@ public class LireEnvoyerCommandesTest {
 		// Cas 2 : Le plat n'est pas dans la liste.
 		assertFalse(LireEnvoyerCommandes.platExiste(new Commande("Nathan", "Mochi", 1)));
 	}
-
-	/*
-	 * private void testerCommandeIncorrecte(String[] input, String[]
-	 * factureAttendue) throws IOException{ changerInput(input);//changer le fichier
-	 * entree pour faire nos tests LireEnvoyerCommandes.main(null);//appeler main
-	 * pour faire le traitement changerInput(inputOriginal);// reset le
-	 * fichierEntree String[] factureRecue = lireSortieFacture();//recuperer le
-	 * resultat
-	 * 
-	 * // 3 est ligne ou on lit commande invalide la ligne qui suit donne
-	 * l'explication de l'erreur assertEquals(factureAttendue[3], factureRecue[3]);
-	 * // 4 est ligne ou on lit commande invalide la ligne qui suit donne
-	 * l'explication de l'erreur, pour la facture 6 elle lit le nom
-	 * assertEquals(factureAttendue[4], factureRecue[4]); // 5 est ligne ou on lit
-	 * commande invalide la ligne qui suit donne l'explication de l'erreur, pour la
-	 * facture 6 elle lit le nom assertEquals(factureAttendue[5], factureRecue[5]);
-	 * 
-	 * }
-	 */
 
 	/**
 	 * test 2
@@ -414,6 +413,7 @@ public class LireEnvoyerCommandesTest {
 		String[] input = { "Clients :", "Roger", "Céline", "Steeve", "Plats :", "Poutine 10.5", "Frites 2.5",
 				"Repas_Poulet 15.75", "Commandes :", "Roger Poutine 1", "Céline Frites 2", "Céline Repas_Poulet 1",
 				"Fin" };
+		
 		String[] factureAttendu = { "Bienvenue chez Barette!", "", "Factures :", "Roger 12.08$", "Céline 23.86$" }; // le
 																													// output
 																													// que
