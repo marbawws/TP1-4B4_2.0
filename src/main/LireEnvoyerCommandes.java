@@ -25,7 +25,6 @@ public class LireEnvoyerCommandes {
 	public static ArrayList<Client> listeClients = new ArrayList<Client>();
 	public static ArrayList<Plat> listePlats = new ArrayList<Plat>();
 	public static ArrayList<Commande> listeCommandes = new ArrayList<Commande>();
-
 	
 	public static ArrayList<String> erreurs = new ArrayList<String>();
 	public static ArrayList<String> factures = new ArrayList<String>();
@@ -63,8 +62,6 @@ public class LireEnvoyerCommandes {
 			System.out.println(ligneSortie);
 		}
 	}
-	
-	
 	
 	/*
 	 * Crée la facture pour la commande entrée en paramètre si elle est valide.
