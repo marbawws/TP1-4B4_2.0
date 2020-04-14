@@ -1,0 +1,40 @@
+-- Commandes incorrectes --
+    
+    Une commande est incorrecte si le nom du client ou du plat n'est pas dans 
+    la liste de clients/plats ou si aucun plat n'a été commandé.
+
+-- Affichage de la facture sur le terminal et dans le fichier --
+
+    La sortie doit maintenant être affichée sur le terminal et le fichier 
+    doit maintenant comporter la date et l'heure au moment de sa création.
+
+-- Affichage des commandes incorrectes --
+
+    Les commandes incorrectes doivent maintenant être affichées 
+    avant les factures. Les détails de la commande et la raison de
+    l'erreur doivent également être affichés.
+    
+    Voici le format à respecter:
+
+        Bienvenue chez Barette!
+
+        Erreurs :
+
+        Commande incorrecte
+        Roge Poutin 1
+        Le plat Poutin n'existe pas. Le Client Roge n'existe pas.
+
+        Factures :
+
+        ...
+
+-- Questions --
+
+    -Qu'est-ce que « Des chiffres sont erronés » veut dire?
+     J'ai assumé qu'on parle de caractères non-numériques et
+     de tout les chiffres <= à 0.
+
+    -Quel est la quantité maximale de plats pouvant être commandés?
+     Est-ce qu'il faut gérer cela?
+
+    -Que faire une commande est invalide pour plus qu'une raison?
